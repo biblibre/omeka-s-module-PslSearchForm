@@ -33,7 +33,6 @@ use Zend\Form\Fieldset;
 use Zend\Form\Form;
 use Zend\I18n\Translator\TranslatorAwareInterface;
 use Zend\I18n\Translator\TranslatorAwareTrait;
-use Search\Form\SearchFormInterface;
 use Search\Query;
 
 class PslForm extends Form implements TranslatorAwareInterface
