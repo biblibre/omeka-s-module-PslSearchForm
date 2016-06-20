@@ -44,6 +44,11 @@ class PslFormAdapter implements FormAdapterInterface
         return  'PslSearchForm\Form\PslForm';
     }
 
+    public function getFormPartial()
+    {
+        return 'psl-search-form/psl-search-form';
+    }
+
     public function getConfigFormClass()
     {
         return 'PslSearchForm\Form\PslFormConfigFieldset';
