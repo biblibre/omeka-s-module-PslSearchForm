@@ -53,6 +53,19 @@ class PslFormConfigFieldset extends Fieldset
                 'required' => true,
             ],
         ]);
+
+        $this->add([
+            'name' => 'item_set_id_field',
+            'type' => 'Select',
+            'options' => [
+                'label' => $translator->translate('Item set id field'),
+                'value_options' => $this->getFieldsOptions(),
+                'empty_option' => $translator->translate('None'),
+            ],
+            'attributes' => [
+                'required' => true,
+            ],
+        ]);
     }
 
     protected function getFieldsOptions()

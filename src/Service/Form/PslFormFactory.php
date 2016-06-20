@@ -41,6 +41,7 @@ class PslFormFactory implements FactoryInterface
 
         $form = new PslForm;
         $form->setTranslator($serviceLocator->get('MvcTranslator'));
+        $form->setApiManager($serviceLocator->get('Omeka\ApiManager'));
 
         return $form;
     }

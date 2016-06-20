@@ -39,6 +39,8 @@ class PslForm extends Form implements TranslatorAwareInterface
 {
     use TranslatorAwareTrait;
 
+    protected $apiManager;
+
     public function init()
     {
         $translator = $this->getTranslator();
@@ -69,6 +71,26 @@ class PslForm extends Form implements TranslatorAwareInterface
                 'type' => 'submit',
             ],
         ]);
+    }
+
+    public function getInputFilter()
+    {
+        $inputFilter = parent::getInputFilter();
+
+        $itemSetIds = $inputFilter->get('itemSet')->get('ids');
+        $itemSetIds->setRequired(false);
+
+        return $inputFilter;
+    }
+
+    public function setApiManager($apiManager)
+    {
+        $this->apiManager = $apiManager;
+    }
+
+    public function getApiManager()
+    {
+        return $this->apiManager;
     }
 
     protected function mapFieldset()
@@ -116,9 +138,14 @@ class PslForm extends Form implements TranslatorAwareInterface
     {
         $fieldset = new Fieldset('itemSet');
 
-        //$fieldset->add([
-        //    ...
-        //]);
+        $fieldset->add([
+            'name' => 'ids',
+            'type' => 'MultiCheckbox',
+            'options' => [
+                'label' => $this->translate('Collections'),
+                'value_options' => $this->getItemSetsOptions(),
+            ],
+        ]);
 
         return $fieldset;
     }
@@ -137,5 +164,18 @@ class PslForm extends Form implements TranslatorAwareInterface
     protected function translate($string)
     {
         return $this->getTranslator()->translate($string);
+    }
+
+    protected function getItemSetsOptions()
+    {
+        $api = $this->getApiManager();
+
+        $itemSets = $api->search('item_sets')->getContent();
+        $options = [];
+        foreach ($itemSets as $itemSet) {
+            $options[$itemSet->id()] = $itemSet->displayTitle();
+        }
+
+        return $options;
     }
 }

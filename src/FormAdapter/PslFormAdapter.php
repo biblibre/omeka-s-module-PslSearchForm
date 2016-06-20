@@ -66,6 +66,11 @@ class PslFormAdapter implements FormAdapterInterface
             }
         }
 
+        if (isset($data['itemSet']['ids'])) {
+            $field = $formSettings['item_set_id_field'];
+            $query->addFilter($field, $data['itemSet']['ids']);
+        }
+
         return $query;
     }
 }
