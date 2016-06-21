@@ -44,6 +44,11 @@ ul.psl-tabs a {
     border-bottom: 3px solid transparent;
 }
 
+ul.psl-tabs a:active,
+ul.psl-tabs a:focus {
+  outline: none;
+}
+
 ul.psl-tabs li.psl-tab-populated a {
   border-bottom-color: red;
 }
