@@ -5,7 +5,7 @@
 
 #psl-search-form > div {
     background-color: #cccccc;
-    padding: 1px 0 /* To prevent margin collapsing */
+    padding: 0.5em 1em;
 }
 
 ul.psl-tabs {
@@ -46,15 +46,15 @@ ul.psl-tabs a {
 
 ul.psl-tabs a:active,
 ul.psl-tabs a:focus {
-  outline: none;
+    outline: none;
 }
 
 ul.psl-tabs li.psl-tab-populated a {
-  border-bottom-color: red;
+    border-bottom-color: red;
 }
 
 ul.psl-tabs li.psl-tab-active a {
-  border-bottom-color: transparent;
+    border-bottom-color: transparent;
 }
 
 ul.psl-tabs i {
@@ -73,12 +73,15 @@ ul.psl-tabs li.psl-tab-submit input {
 
 #psl-search-form-itemset .field {
     margin: 0;
-    padding: 0 1em;
     display: block;
 }
 
+#psl-search-form-itemset .field-meta {
+    padding: 0;
+}
+
 #psl-search-form-itemset .field-meta label {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 #psl-search-form-itemset .inputs {
@@ -87,10 +90,54 @@ ul.psl-tabs li.psl-tab-submit input {
 }
 
 #psl-search-form-itemset .inputs > label {
-  display: block;
+    display: block;
 }
 
 #psl-search-form-itemset .inputs input {
-  vertical-align: middle;
-  margin-right: 0.5em;
+    vertical-align: middle;
+    margin-right: 0.5em;
+}
+
+#psl-search-form-date > label {
+    font-weight: bold;
+}
+
+#psl-search-form-date #psl-search-form-date-slider {
+    margin-top: 1em;
+    height: 10px;
+}
+
+#psl-search-form-date #psl-search-form-date-slider .ui-slider-handle {
+    background: black;
+    width: 10px;
+    margin-left: -5px;
+    top: -8px;
+    border-radius: 0;
+    border: 0 none;
+}
+
+#psl-search-form-date #psl-search-form-date-slider .ui-slider-range {
+    background: black;
+}
+
+#psl-search-form-date-graduations {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1em;
+}
+
+#psl-search-form-date-graduations > div {
+    border-right: 1px solid black;
+    border-left: 1px solid black;
+    flex-grow: 1;
+    flex-basis: 12.5%;
+    text-align: center;
+}
+
+#psl-search-form-date-graduations > div:last-child {
+    border-right: 0 none;
+}
+
+#psl-search-form-date-graduations > div:first-child {
+    border-left: 0 none;
 }

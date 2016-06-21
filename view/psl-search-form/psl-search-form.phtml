@@ -1,4 +1,6 @@
 <?php
+    $this->headScript()->appendFile($this->assetUrl('jquery-ui.min.js', 'jQueryUI'));
+    $this->headLink()->appendStylesheet($this->assetUrl('jquery-ui.min.css', 'jQueryUI'));
     $this->headScript()->appendFile($this->assetUrl('js/psl-tabs.js', 'PslSearchForm'));
     $this->headLink()->appendStylesheet($this->assetUrl('css/psl-form.css', 'PslSearchForm'));
 ?>
@@ -19,7 +21,19 @@
         <?php echo $this->formCollection($form->get('map'), false); ?>
     </div>
     <div id="psl-search-form-date">
+        <label>Période concernée</label>
         <?php echo $this->formCollection($form->get('date'), false); ?>
+        <div id="psl-search-form-date-slider"></div>
+        <div id="psl-search-form-date-graduations">
+            <div>XIVe siècle</div>
+            <div>XVe</div>
+            <div>XVIe</div>
+            <div>XVIIe</div>
+            <div>XVIIIe</div>
+            <div>IXe</div>
+            <div>XXe</div>
+            <div>XXIe siècle</div>
+        </div>
     </div>
     <div id="psl-search-form-itemset">
         <?php echo $this->formCollection($form->get('itemSet'), false); ?>
@@ -77,5 +91,33 @@
             })(name);
             tab.inputs.on('change', handler).trigger('change');
         }
+    });
+
+    $(document).ready(function() {
+        var dateFrom = $('#psl-search-form input[name="date[from]"]');
+        var dateTo = $('#psl-search-form input[name="date[to]"]');
+        var dateMin = 1300;
+        var dateMax = 2100;
+
+        $('#psl-search-form-date-slider').slider({
+            range: true,
+            min: dateMin,
+            max: dateMax,
+            step: 100,
+            values: [dateFrom.val() || dateMin, dateTo.val() || dateMax],
+            slide: function(event, ui) {
+                var from = ui.values[0] > dateMin ? ui.values[0] : '';
+                var to = ui.values[1] < dateMax ? ui.values[1] : '';
+                if (from != dateFrom.val()) {
+                    dateFrom.val(from).change();
+                }
+                if (to != dateTo.val()) {
+                    dateTo.val(to).change();
+                }
+            }
+        });
+
+        dateFrom.parents('.field').hide();
+        dateTo.parents('.field').hide();
     });
 </script>
