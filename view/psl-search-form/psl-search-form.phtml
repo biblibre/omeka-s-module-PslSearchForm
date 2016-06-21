@@ -8,38 +8,48 @@
 <?php $form->prepare(); ?>
 <?php echo $this->form()->openTag($form); ?>
 
-<div id="psl-search-form">
-    <ul class="psl-tabs">
-        <li class="psl-tab-map"><a href="#psl-search-form-map"><i class="fa fa-map-marker"></i></a></li>
-        <li class="psl-tab-date"><a href="#psl-search-form-date"><i class="fa fa-hourglass-half"></i></a></li>
-        <li class="psl-tab-itemset"><a href="#psl-search-form-itemset"><i class="fa fa-book"></i></a></li>
-        <li class="psl-tab-search"><?php echo $this->formText($form->get('q')); ?></li>
-        <li class="psl-tab-text"><a href="#psl-search-form-text"><i class="fa fa-plus"></i></a></li>
-        <li class="psl-tab-submit"><input type="submit" value="OK"/></li>
-    </ul>
-    <div id="psl-search-form-map">
-        <?php echo $this->formCollection($form->get('map'), false); ?>
-    </div>
-    <div id="psl-search-form-date">
-        <label>Période concernée</label>
-        <?php echo $this->formCollection($form->get('date'), false); ?>
-        <div id="psl-search-form-date-slider"></div>
-        <div id="psl-search-form-date-graduations">
-            <div>XIVe siècle</div>
-            <div>XVe</div>
-            <div>XVIe</div>
-            <div>XVIIe</div>
-            <div>XVIIIe</div>
-            <div>IXe</div>
-            <div>XXe</div>
-            <div>XXIe siècle</div>
+<div id="psl-search-form-wrapper">
+    <button type="button" class="psl-new-search">Nouvelle recherche</button>
+    <div id="psl-search-form">
+        <ul class="psl-tabs">
+            <li class="psl-tab-map"><a href="#psl-search-form-map"><i class="fa fa-map-marker"></i></a></li>
+            <li class="psl-tab-date"><a href="#psl-search-form-date"><i class="fa fa-hourglass-half"></i></a></li>
+            <li class="psl-tab-itemset"><a href="#psl-search-form-itemset"><i class="fa fa-book"></i></a></li>
+            <li class="psl-tab-search">
+                <button type="button" class="reset-tab" data-tab="search"><i class="fa fa-times-circle-o"></i></button>
+                <?php echo $this->formText($form->get('q')); ?>
+            </li>
+            <li class="psl-tab-text"><a href="#psl-search-form-text"><i class="fa fa-plus"></i></a></li>
+            <li class="psl-tab-submit"><input type="submit" value="OK"/></li>
+        </ul>
+        <div id="psl-search-form-map">
+            <?php echo $this->formCollection($form->get('map'), false); ?>
+            <button type="button" class="reset-tab" data-tab="map">Réinitialiser</button>
         </div>
-    </div>
-    <div id="psl-search-form-itemset">
-        <?php echo $this->formCollection($form->get('itemSet'), false); ?>
-    </div>
-    <div id="psl-search-form-text">
-        <?php echo $this->formCollection($form->get('text'), false); ?>
+        <div id="psl-search-form-date">
+            <label>Période concernée</label>
+            <?php echo $this->formCollection($form->get('date'), false); ?>
+            <div id="psl-search-form-date-slider"></div>
+            <div id="psl-search-form-date-graduations">
+                <div>XIVe siècle</div>
+                <div>XVe</div>
+                <div>XVIe</div>
+                <div>XVIIe</div>
+                <div>XVIIIe</div>
+                <div>IXe</div>
+                <div>XXe</div>
+                <div>XXIe siècle</div>
+            </div>
+            <button type="button" class="reset-tab" data-tab="date">Réinitialiser</button>
+        </div>
+        <div id="psl-search-form-itemset">
+            <?php echo $this->formCollection($form->get('itemSet'), false); ?>
+            <button type="button" class="reset-tab" data-tab="itemset">Réinitialiser</button>
+        </div>
+        <div id="psl-search-form-text">
+            <?php echo $this->formCollection($form->get('text'), false); ?>
+            <button type="button" class="reset-tab" data-tab="text">Réinitialiser</button>
+        </div>
     </div>
 </div>
 
@@ -51,6 +61,7 @@
 
         var dateInputs = $('#psl-search-form-date input');
         var itemsetInputs = $('#psl-search-form-itemset input');
+        var searchInputs = $('#psl-search-form .psl-tab-search input');
 
         var tabs = {
             date: {
@@ -62,6 +73,12 @@
                             return true;
                         }
                     }
+                },
+                reset: function() {
+                    var dateSlider = $('#psl-search-form-date-slider');
+                    var min = dateSlider.slider('option', 'min');
+                    var max = dateSlider.slider('option', 'max');
+                    dateSlider.slider('values', [min, max]);
                 }
             },
             itemset: {
@@ -73,24 +90,70 @@
                             return true;
                         }
                     }
+                },
+                reset: function() {
+                    itemsetInputs.prop('checked', false).change();
+                }
+            },
+            search: {
+                inputs: searchInputs,
+                isPopulated: function() {
+                    var inputs = searchInputs.toArray();
+                    for (var i = 0; i < inputs.length; i++) {
+                        if (inputs[i].value !== '') {
+                            return true;
+                        }
+                    }
+                },
+                reset: function() {
+                    searchInputs.val('').change();
                 }
             }
         };
 
+        var formIsPopulated = function() {
+            return $('#psl-search-form .psl-tab-populated').length > 0;
+        };
+
+        // Populated tab markers
         for (name in tabs) {
             var tab = tabs[name];
             var handler = (function(name) {
                 return function() {
                     var li = $('#psl-search-form li.psl-tab-' + name);
+                    var div = $('#psl-search-form-' + name);
                     if (tabs[name].isPopulated()) {
                         li.addClass('psl-tab-populated');
+                        div.addClass('psl-tab-populated');
                     } else {
                         li.removeClass('psl-tab-populated');
+                        div.removeClass('psl-tab-populated');
+                    }
+
+                    var newSearchButton = $('#psl-search-form-wrapper .psl-new-search');
+                    if (formIsPopulated()) {
+                        newSearchButton.css('visibility', 'visible');
+                    } else {
+                        newSearchButton.css('visibility', 'hidden');
                     }
                 };
             })(name);
-            tab.inputs.on('change', handler).trigger('change');
+            tab.inputs.on('change keyup', handler).trigger('change');
         }
+
+        // Reset buttons
+        $('#psl-search-form button.reset-tab').on('click', function(e) {
+            e.preventDefault();
+            var name = $(this).attr('data-tab');
+            tabs[name].reset();
+        });
+
+        $('#psl-search-form-wrapper .psl-new-search').on('click', function(e) {
+            e.preventDefault();
+            for (name in tabs) {
+                tabs[name].reset();
+            }
+        });
     });
 
     $(document).ready(function() {
@@ -105,7 +168,7 @@
             max: dateMax,
             step: 100,
             values: [dateFrom.val() || dateMin, dateTo.val() || dateMax],
-            slide: function(event, ui) {
+            change: function(event, ui) {
                 var from = ui.values[0] > dateMin ? ui.values[0] : '';
                 var to = ui.values[1] < dateMax ? ui.values[1] : '';
                 if (from != dateFrom.val()) {

@@ -1,3 +1,7 @@
+#psl-search-form-wrapper .psl-new-search {
+    background: lightgreen;
+}
+
 #psl-search-form {
     border: 1px solid black;
     margin-bottom: 2em;
@@ -65,10 +69,33 @@ ul.psl-tabs li.psl-tab-search input {
     border: 0 none;
     width: 100%;
     height: 100%;
+    padding-left: 50px;
 }
 
 ul.psl-tabs li.psl-tab-submit input {
     width: 100%;
+}
+
+#psl-search-form button.reset-tab {
+    visibility: hidden;
+    background-color: transparent;
+    border: 1px solid red;
+    color: red;
+    padding: 0;
+}
+
+#psl-search-form .psl-tab-populated button.reset-tab {
+    visibility: visible;
+}
+
+#psl-search-form .psl-tab-search {
+    position: relative;
+}
+
+#psl-search-form .psl-tab-search button.reset-tab {
+    border: 0 none;
+    position: absolute;
+    height: 100%;
 }
 
 #psl-search-form-itemset .field {
