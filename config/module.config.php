@@ -3,6 +3,7 @@ return [
     'form_elements' => [
         'factories' => [
             'PslSearchForm\Form\PslForm' => 'PslSearchForm\Service\Form\PslFormFactory',
+            'PslSearchForm\Form\FilterFieldset' => 'PslSearchForm\Service\Form\FilterFieldsetFactory',
             'PslSearchForm\Form\PslFormConfigFieldset' => 'PslSearchForm\Service\Form\PslFormConfigFieldsetFactory',
         ],
     ],

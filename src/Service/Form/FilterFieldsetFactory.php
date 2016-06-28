@@ -29,11 +29,11 @@
 
 namespace PslSearchForm\Service\Form;
 
-use PslSearchForm\Form\PslForm;
 use Zend\ServiceManager\FactoryInterface;
 use Zend\ServiceManager\ServiceLocatorInterface;
+use PslSearchForm\Form\FilterFieldset;
 
-class PslFormFactory implements FactoryInterface
+class FilterFieldsetFactory implements FactoryInterface
 {
     protected $options = [];
 
@@ -41,12 +41,9 @@ class PslFormFactory implements FactoryInterface
     {
         $serviceLocator = $elements->getServiceLocator();
 
-        $form = new PslForm(null, $this->options);
-        $form->setTranslator($serviceLocator->get('MvcTranslator'));
-        $form->setApiManager($serviceLocator->get('Omeka\ApiManager'));
-        $form->setFormElementManager($serviceLocator->get('FormElementManager'));
+        $fieldset = new FilterFieldset(null, $this->options);
 
-        return $form;
+        return $fieldset;
     }
 
     public function setCreationOptions($options)

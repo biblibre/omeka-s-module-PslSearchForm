@@ -27,30 +27,57 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-namespace PslSearchForm\Service\Form;
+namespace PslSearchForm\Form;
 
-use PslSearchForm\Form\PslForm;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Zend\Form\Fieldset;
 
-class PslFormFactory implements FactoryInterface
+class FilterFieldset extends Fieldset
 {
-    protected $options = [];
-
-    public function createService(ServiceLocatorInterface $elements)
+    public function init()
     {
-        $serviceLocator = $elements->getServiceLocator();
+        $this->setAttributes([
+            'class' => 'filter',
+        ]);
 
-        $form = new PslForm(null, $this->options);
-        $form->setTranslator($serviceLocator->get('MvcTranslator'));
-        $form->setApiManager($serviceLocator->get('Omeka\ApiManager'));
-        $form->setFormElementManager($serviceLocator->get('FormElementManager'));
+        $this->add([
+            'type' => 'Select',
+            'name' => 'field',
+            'options' => [
+                'value_options' => $this->getFieldOptions(),
+            ],
+        ]);
 
-        return $form;
+        $this->add([
+            'type' => 'Text',
+            'name' => 'value',
+        ]);
     }
 
-    public function setCreationOptions($options)
+    protected function sortByWeight($fields, $settings) {
+        uksort($fields, function($a, $b) use ($settings) {
+            $aWeight = $settings[$a]['weight'];
+            $bWeight = $settings[$b]['weight'];
+            return $aWeight - $bWeight;
+        });
+        return $fields;
+    }
+
+    protected function getFieldOptions()
     {
-        $this->options = $options;
+        $searchPage = $this->getOption('search_page');
+        $availableFields = $searchPage->index()->adapter()->getAvailableFields();
+        $settings = $searchPage->settings();
+        $formSettings = $settings['form'];
+
+        $options = [];
+        foreach ($formSettings['advanced-fields'] as $name => $field) {
+            if ($field['enabled'] && isset($availableFields[$name])) {
+                $options[$name] = $availableFields[$name]['label'];
+            }
+        }
+
+        $options = $this->sortByWeight($options, $formSettings['advanced-fields']);
+
+        return $options;
     }
 }

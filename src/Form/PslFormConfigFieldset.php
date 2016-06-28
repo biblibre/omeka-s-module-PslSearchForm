@@ -41,6 +41,8 @@ class PslFormConfigFieldset extends Fieldset
     {
         $translator = $this->getTranslator();
 
+        $this->add($this->getAdvancedFieldsFieldset());
+
         $this->add([
             'name' => 'date_range_field',
             'type' => 'Select',
@@ -66,14 +68,74 @@ class PslFormConfigFieldset extends Fieldset
                 'required' => true,
             ],
         ]);
+
+        $this->add([
+            'name' => 'creation_year_field',
+            'type' => 'Select',
+            'options' => [
+                'label' => $translator->translate('Creation year field'),
+                'value_options' => $this->getFieldsOptions(),
+                'empty_option' => $translator->translate('None'),
+            ],
+            'attributes' => [
+                'required' => true,
+            ],
+        ]);
+    }
+
+    protected function getAdvancedFieldsFieldset()
+    {
+        $translator = $this->getTranslator();
+
+        $advancedFieldsFieldset = new Fieldset('advanced-fields');
+        $advancedFieldsFieldset->setLabel($translator->translate('Advanced search fields'));
+        $advancedFieldsFieldset->setAttribute('data-sortable', '1');
+
+        $fields = $this->getAvailableFields();
+        $weights = range(0, count($fields));
+        $weight_options = array_combine($weights, $weights);
+        $weight = 0;
+        foreach ($fields as $field) {
+            $fieldset = new Fieldset($field['name']);
+            $fieldset->setLabel(sprintf('%s (%s)', $field['label'], $field['name']));
+
+            $fieldset->add([
+                'name' => 'enabled',
+                'type' => 'Checkbox',
+                'options' => [
+                    'label' => $translator->translate('Enabled'),
+                ],
+            ]);
+
+            $fieldset->add([
+                'name' => 'weight',
+                'type' => 'Select',
+                'options' => [
+                    'label' => $translator->translate('Weight'),
+                    'value_options' => $weight_options,
+                ],
+                'attributes' => [
+                    'value' => $weight++,
+                ],
+            ]);
+
+            $advancedFieldsFieldset->add($fieldset);
+        }
+
+        return $advancedFieldsFieldset;
+    }
+
+    protected function getAvailableFields()
+    {
+        $searchPage = $this->getOption('search_page');
+        $searchAdapter = $searchPage->index()->adapter();
+        return $searchAdapter->getAvailableFields();
     }
 
     protected function getFieldsOptions()
     {
-        $searchPage = $this->getOption('search_page');
-        $searchAdapter = $searchPage->index()->adapter();
         $options = [];
-        foreach ($searchAdapter->getAvailableFields() as $name => $field) {
+        foreach ($this->getAvailableFields() as $name => $field) {
             $options[$name] = sprintf('%s (%s)', $field['label'], $name);
         }
         return $options;

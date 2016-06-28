@@ -93,6 +93,16 @@ class PslForm extends Form implements TranslatorAwareInterface
         return $this->apiManager;
     }
 
+    public function setFormElementManager($formElementManager)
+    {
+        $this->formElementManager = $formElementManager;
+    }
+
+    public function getFormElementManager()
+    {
+        return $this->formElementManager;
+    }
+
     protected function mapFieldset()
     {
         $fieldset = new Fieldset('map');
@@ -154,9 +164,28 @@ class PslForm extends Form implements TranslatorAwareInterface
     {
         $fieldset = new Fieldset('text');
 
-        //$fieldset->add([
-        //    ...
-        //]);
+        $fieldset->add([
+            'type' => 'Collection',
+            'name' => 'filters',
+            'options' => [
+                'label' => 'Filters',
+                'count' => 2,
+                'should_create_template' => true,
+                'allow_add' => true,
+                'target_element' => $this->getFilterFieldset(),
+            ],
+        ]);
+
+        $fieldset->add([
+            'type' => 'Text',
+            'name' => 'creation-year',
+            'options' => [
+                'label' => $this->translate('Creation year'),
+            ],
+            'attributes' => [
+                'placeholder' => $this->translate('YYYY'),
+            ],
+        ]);
 
         return $fieldset;
     }
@@ -177,5 +206,17 @@ class PslForm extends Form implements TranslatorAwareInterface
         }
 
         return $options;
+    }
+
+    protected function getForm($name, $options)
+    {
+        $formElementManager = $this->getFormElementManager();
+        return $formElementManager->get($name, $options);
+    }
+
+    protected function getFilterFieldset()
+    {
+        $options = $this->getOptions();
+        return $this->getForm('PslSearchForm\Form\FilterFieldset', $options);
     }
 }

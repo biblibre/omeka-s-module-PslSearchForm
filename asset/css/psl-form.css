@@ -168,3 +168,16 @@ ul.psl-tabs li.psl-tab-submit input {
 #psl-search-form-date-graduations > div:first-child {
     border-left: 0 none;
 }
+
+#psl-search-form-text .filter {
+    border: 0 none;
+    padding: 0.25em 0;
+}
+
+#psl-search-form-text .filter input[type="text"] {
+    margin-left: 2em;
+}
+
+#psl-search-form-text .field-meta {
+    width: auto;
+}

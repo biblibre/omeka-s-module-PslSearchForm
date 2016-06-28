@@ -76,6 +76,19 @@ class PslFormAdapter implements FormAdapterInterface
             $query->addFilter($field, $data['itemSet']['ids']);
         }
 
+        if (isset($data['text']['filters'])) {
+            foreach ($data['text']['filters'] as $filter) {
+                if (!empty($filter['value'])) {
+                    $query->addFilter($filter['field'], $filter['value']);
+                }
+            }
+        }
+
+        if (!empty($data['text']['creation-year'])) {
+            $field = $formSettings['creation_year_field'];
+            $query->addFilter($field, $data['text']['creation-year']);
+        }
+
         return $query;
     }
 }

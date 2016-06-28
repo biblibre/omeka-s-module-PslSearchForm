@@ -55,7 +55,15 @@
             <button type="button" class="reset-tab" data-tab="itemset"><?php echo $this->translate('Reset'); ?></button>
         </div>
         <div id="psl-search-form-text">
-            <?php echo $this->formCollection($form->get('text'), false); ?>
+            <div class="filters">
+                <?php $filters = $form->get('text')->get('filters'); ?>
+                <?php foreach ($filters->getFieldsets() as $fieldset): ?>
+                    <?php echo $this->formCollection($fieldset, true); ?>
+                <?php endforeach; ?>
+                <?php echo $this->formCollection()->renderTemplate($filters); ?>
+                <button type="button" class="psl-add-filter">Add filter</button>
+            </div>
+            <?php echo $this->formRow($form->get('text')->get('creation-year')); ?>
             <button type="button" class="reset-tab" data-tab="text"><?php echo $this->translate('Reset'); ?></button>
         </div>
     </div>
@@ -65,17 +73,20 @@
 
 <script>
     $(document).ready(function() {
-        $('#psl-search-form').pslTabs();
+        var form = $('#psl-search-form');
 
-        var dateInputs = $('#psl-search-form-date input');
-        var itemsetInputs = $('#psl-search-form-itemset input');
-        var searchInputs = $('#psl-search-form .psl-tab-search input');
+        form.pslTabs();
+
+        var dateInputsSelector = '#psl-search-form-date input';
+        var itemsetInputsSelector = '#psl-search-form-itemset input';
+        var searchInputsSelector = '.psl-tab-search input';
+        var textInputsSelector = '#psl-search-form-text input';
 
         var tabs = {
             date: {
-                inputs: dateInputs,
+                inputsSelector: dateInputsSelector,
                 isPopulated: function() {
-                    var inputs = dateInputs.toArray();
+                    var inputs = form.find(dateInputsSelector).toArray();
                     for (var i = 0; i < inputs.length; i++) {
                         if (inputs[i].value !== '') {
                             return true;
@@ -90,9 +101,9 @@
                 }
             },
             itemset: {
-                inputs: itemsetInputs,
+                inputsSelector: itemsetInputsSelector,
                 isPopulated: function() {
-                    var inputs = itemsetInputs.toArray();
+                    var inputs = form.find(itemsetInputsSelector).toArray();
                     for (var i = 0; i < inputs.length; i++) {
                         if (inputs[i].checked) {
                             return true;
@@ -100,13 +111,13 @@
                     }
                 },
                 reset: function() {
-                    itemsetInputs.prop('checked', false).change();
+                    form.find(itemsetInputsSelector).prop('checked', false).change();
                 }
             },
             search: {
-                inputs: searchInputs,
+                inputsSelector: searchInputsSelector,
                 isPopulated: function() {
-                    var inputs = searchInputs.toArray();
+                    var inputs = form.find(searchInputsSelector).toArray();
                     for (var i = 0; i < inputs.length; i++) {
                         if (inputs[i].value !== '') {
                             return true;
@@ -114,13 +125,31 @@
                     }
                 },
                 reset: function() {
-                    searchInputs.val('').change();
+                    form.find(searchInputsSelector).val('').change();
+                }
+            },
+            text: {
+                inputsSelector: textInputsSelector,
+                isPopulated: function() {
+                    var inputs = form.find(textInputsSelector).toArray();
+                    for (var i = 0; i < inputs.length; i++) {
+                        if (inputs[i].value !== '') {
+                            return true;
+                        }
+                    }
+                },
+                reset: function() {
+                    form.find(textInputsSelector).parents('.filter').slice(2).remove();
+                    form.find(textInputsSelector).val('').change();
+                    $('#psl-search-form-text select').each(function() {
+                        this.selectedIndex = 0;
+                    });
                 }
             }
         };
 
         var formIsPopulated = function() {
-            return $('#psl-search-form .psl-tab-populated').length > 0;
+            return form.find('.psl-tab-populated').length > 0;
         };
 
         // Populated tab markers
@@ -128,7 +157,7 @@
             var tab = tabs[name];
             var handler = (function(name) {
                 return function() {
-                    var li = $('#psl-search-form li.psl-tab-' + name);
+                    var li = form.find('li.psl-tab-' + name);
                     var div = $('#psl-search-form-' + name);
                     if (tabs[name].isPopulated()) {
                         li.addClass('psl-tab-populated');
@@ -146,11 +175,13 @@
                     }
                 };
             })(name);
-            tab.inputs.on('change keyup', handler).trigger('change');
+
+            form.on('change keyup', tab.inputsSelector, handler);
+            form.find(tab.inputsSelector).trigger('change');
         }
 
         // Reset buttons
-        $('#psl-search-form button.reset-tab').on('click', function(e) {
+        form.find('button.reset-tab').on('click', function(e) {
             e.preventDefault();
             var name = $(this).attr('data-tab');
             tabs[name].reset();
@@ -190,5 +221,15 @@
 
         dateFrom.parents('.field').hide();
         dateTo.parents('.field').hide();
+    });
+
+    $(document).ready(function() {
+        $('#psl-search-form .psl-add-filter').on('click', function() {
+            var filters = $(this).parents('.filters');
+            var count = filters.children('.filter').length;
+            var template = filters.children('span').attr('data-template');
+            template = template.replace(/__index__/g, count);
+            filters.children('.filter').last().after(template);
+        });
     });
 </script>
