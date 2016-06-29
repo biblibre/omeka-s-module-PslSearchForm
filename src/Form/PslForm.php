@@ -103,13 +103,45 @@ class PslForm extends Form implements TranslatorAwareInterface
         return $this->formElementManager;
     }
 
+    public function getLocations()
+    {
+        $searchPage = $this->getOption('search_page');
+        $settings = $searchPage->settings();
+        $formSettings = $settings['form'];
+        $locations = $formSettings['locations'];
+        $spatialCoverageField = $formSettings['spatial_coverage_field'];
+
+        $searchQuerier = $searchPage->index()->querier();
+
+        $query = new Query;
+        $query->setResources(['items']);
+        $query->addFacetField($spatialCoverageField);
+
+        $response = $searchQuerier->query($query);
+
+        $facetCounts = $response->getFacetCounts();
+        $locationsOut = [];
+        foreach ($facetCounts[$spatialCoverageField] as $facetCount) {
+            $name = $facetCount['value'];
+            if (isset($locations[$name])) {
+                $locationsOut[$name] = [
+                    'coords' => $locations[$name],
+                    'count' => $facetCount['count'],
+                ];
+            }
+        }
+
+        return $locationsOut;
+    }
+
     protected function mapFieldset()
     {
         $fieldset = new Fieldset('map');
 
-        //$fieldset->add([
-        //    ...
-        //]);
+        $fieldset->add([
+            'type' => 'Hidden',
+            'name' => 'spatial-coverage',
+        ]);
 
         return $fieldset;
     }

@@ -32,6 +32,7 @@ namespace PslSearchForm\Form;
 use Zend\Form\Fieldset;
 use Zend\I18n\Translator\TranslatorAwareInterface;
 use Zend\I18n\Translator\TranslatorAwareTrait;
+use Search\Query;
 
 class PslFormConfigFieldset extends Fieldset
 {
@@ -81,6 +82,21 @@ class PslFormConfigFieldset extends Fieldset
                 'required' => true,
             ],
         ]);
+
+        $this->add([
+            'name' => 'spatial_coverage_field',
+            'type' => 'Select',
+            'options' => [
+                'label' => $translator->translate('Spatial coverage field'),
+                'value_options' => $this->getFieldsOptions(),
+                'empty_option' => $translator->translate('None'),
+            ],
+            'attributes' => [
+                'required' => true,
+            ],
+        ]);
+
+        $this->add($this->getLocationsFieldset());
     }
 
     protected function getAdvancedFieldsFieldset()
@@ -139,5 +155,49 @@ class PslFormConfigFieldset extends Fieldset
             $options[$name] = sprintf('%s (%s)', $field['label'], $name);
         }
         return $options;
+    }
+
+    protected function getLocationsFieldset()
+    {
+        $translator = $this->getTranslator();
+
+        $fieldset = new Fieldset('locations');
+        $fieldset->setLabel($translator->translate('Locations'));
+
+        foreach ($this->getLocations() as $location) {
+            $fieldset->add([
+                'type' => 'Text',
+                'name' => $location,
+                'options' => [
+                    'label' => $location,
+                ],
+                'attributes' => [
+                    'placeholder' => $translator->translate('Latitude, Longitude'),
+                ],
+            ]);
+        }
+
+        return $fieldset;
+    }
+
+    protected function getLocations()
+    {
+        $searchPage = $this->getOption('search_page');
+        $searchQuerier = $searchPage->index()->querier();
+        $spatialCoverageField = $searchPage->settings()['form']['spatial_coverage_field'];
+
+        $query = new Query;
+        $query->setResources(['items']);
+        $query->addFacetField($spatialCoverageField);
+
+        $response = $searchQuerier->query($query);
+
+        $facetCounts = $response->getFacetCounts();
+        $locations = [];
+        foreach ($facetCounts[$spatialCoverageField] as $facetCount) {
+            $locations[] = $facetCount['value'];
+        }
+
+        return $locations;
     }
 }

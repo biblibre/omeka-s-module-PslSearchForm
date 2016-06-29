@@ -1,6 +1,8 @@
 <?php
     $this->headScript()->appendFile($this->assetUrl('jquery-ui.min.js', 'jQueryUI'));
     $this->headLink()->appendStylesheet($this->assetUrl('jquery-ui.min.css', 'jQueryUI'));
+    $this->headScript()->appendFile($this->assetUrl('leaflet/leaflet.js', 'PslSearchForm'));
+    $this->headLink()->appendStylesheet($this->assetUrl('leaflet/leaflet.css', 'PslSearchForm'));
     $this->headScript()->appendFile($this->assetUrl('js/psl-tabs.js', 'PslSearchForm'));
     $this->headLink()->appendStylesheet($this->assetUrl('css/psl-form.css', 'PslSearchForm'));
 ?>
@@ -32,6 +34,7 @@
         </ul>
         <div id="psl-search-form-map">
             <?php echo $this->formCollection($form->get('map'), false); ?>
+            <div id="psl-search-form-leaflet-map"></div>
             <button type="button" class="reset-tab" data-tab="map"><?php echo $this->translate('Reset'); ?></button>
         </div>
         <div id="psl-search-form-date">
@@ -77,12 +80,27 @@
 
         form.pslTabs();
 
+        var mapInputsSelector = '#psl-search-form-map input';
         var dateInputsSelector = '#psl-search-form-date input';
         var itemsetInputsSelector = '#psl-search-form-itemset input';
         var searchInputsSelector = '.psl-tab-search input';
         var textInputsSelector = '#psl-search-form-text input';
 
         var tabs = {
+            map: {
+                inputsSelector: mapInputsSelector,
+                isPopulated: function() {
+                    var inputs = form.find(mapInputsSelector).toArray();
+                    for (var i = 0; i < inputs.length; i++) {
+                        if (inputs[i].value !== '') {
+                            return true;
+                        }
+                    }
+                },
+                reset: function() {
+                    form.find(mapInputsSelector).val('').change();
+                }
+            },
             date: {
                 inputsSelector: dateInputsSelector,
                 isPopulated: function() {
@@ -231,5 +249,76 @@
             template = template.replace(/__index__/g, count);
             filters.children('.filter').last().after(template);
         });
+    });
+
+    $(document).ready(function() {
+        var markers = [];
+
+        var selectMarker = function(marker) {
+            marker.selected = true;
+            marker.setOpacity(1);
+        };
+        var deselectMarker = function(marker) {
+            marker.selected = false;
+            marker.setOpacity(0.5);
+        };
+        var deselectAllMarkers = function() {
+            for (name in markers) {
+                deselectMarker(markers[name]);
+            }
+        };
+
+        var spatialCoverageInput = $('#psl-search-form input[name="map[spatial-coverage]"]');
+        spatialCoverageInput.on('change', function() {
+            var name = $(this).val();
+            deselectAllMarkers();
+            if (markers[name]) {
+                selectMarker(markers[name]);
+            }
+        });
+
+        var locations = <?php echo json_encode($form->getLocations()); ?>;
+
+        var map = L.map('psl-search-form-leaflet-map', {
+            scrollWheelZoom: false,
+            attributionControl: false
+        }).setView([50.695, -5.537], 3);
+
+        L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png').addTo(map);
+
+        for (name in locations) {
+            var coords = locations[name]['coords'];
+            var count = locations[name]['count']
+
+            var marker = L.marker(coords.split(','), {
+                title: name,
+                opacity: 0.5
+            }).addTo(map);
+
+            marker.selected = false;
+            marker.name = name;
+
+            marker.bindPopup(name + ' (' + count + ')');
+            marker.on('click', function(e) {
+                var m = e.target;
+                spatialCoverageInput.val(m.name).change();
+            });
+            marker.on('mouseover', function(e) {
+                var m = e.target;
+                if (!m.selected) {
+                    m.setOpacity(0.75);
+                }
+            });
+            marker.on('mouseout', function(e) {
+                var m = e.target;
+                if (!m.selected) {
+                    m.setOpacity(0.5);
+                }
+            });
+
+            markers[name] = marker;
+        }
+
+        spatialCoverageInput.trigger('change');
     });
 </script>

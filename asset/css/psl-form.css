@@ -181,3 +181,7 @@ ul.psl-tabs li.psl-tab-submit input {
 #psl-search-form-text .field-meta {
     width: auto;
 }
+
+#psl-search-form-leaflet-map {
+    height: 400px;
+}

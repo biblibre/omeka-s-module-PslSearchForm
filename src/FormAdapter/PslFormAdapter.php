@@ -62,6 +62,11 @@ class PslFormAdapter implements FormAdapterInterface
             $query->setQuery($data['q']);
         }
 
+        if (!empty($data['map']['spatial-coverage'])) {
+            $field = $formSettings['spatial_coverage_field'];
+            $query->addFilter($field, $data['map']['spatial-coverage']);
+        }
+
         if (isset($data['date']['from']) || isset($data['date']['to'])) {
             $field = $formSettings['date_range_field'];
             $start = $data['date']['from'];
