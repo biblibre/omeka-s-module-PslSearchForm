@@ -162,19 +162,23 @@ class PslFormConfigFieldset extends Fieldset
         $translator = $this->getTranslator();
 
         $fieldset = new Fieldset('locations');
-        $fieldset->setLabel($translator->translate('Locations'));
 
-        foreach ($this->getLocations() as $location) {
-            $fieldset->add([
-                'type' => 'Text',
-                'name' => $location,
-                'options' => [
-                    'label' => $location,
-                ],
-                'attributes' => [
-                    'placeholder' => $translator->translate('Latitude, Longitude'),
-                ],
-            ]);
+        $locations = $this->getLocations();
+        if (!empty($locations)) {
+            $fieldset->setLabel($translator->translate('Locations'));
+
+            foreach ($this->getLocations() as $location) {
+                $fieldset->add([
+                    'type' => 'Text',
+                    'name' => $location,
+                    'options' => [
+                        'label' => $location,
+                    ],
+                    'attributes' => [
+                        'placeholder' => $translator->translate('Latitude, Longitude'),
+                    ],
+                ]);
+            }
         }
 
         return $fieldset;
@@ -186,16 +190,18 @@ class PslFormConfigFieldset extends Fieldset
         $searchQuerier = $searchPage->index()->querier();
         $spatialCoverageField = $searchPage->settings()['form']['spatial_coverage_field'];
 
-        $query = new Query;
-        $query->setResources(['items']);
-        $query->addFacetField($spatialCoverageField);
-
-        $response = $searchQuerier->query($query);
-
-        $facetCounts = $response->getFacetCounts();
         $locations = [];
-        foreach ($facetCounts[$spatialCoverageField] as $facetCount) {
-            $locations[] = $facetCount['value'];
+        if ($spatialCoverageField) {
+            $query = new Query;
+            $query->setResources(['items']);
+            $query->addFacetField($spatialCoverageField);
+
+            $response = $searchQuerier->query($query);
+
+            $facetCounts = $response->getFacetCounts();
+            foreach ($facetCounts[$spatialCoverageField] as $facetCount) {
+                $locations[] = $facetCount['value'];
+            }
         }
 
         return $locations;
