@@ -2,6 +2,11 @@
     background: lightgreen;
 }
 
+#psl-search-form-wrapper input[type="submit"],
+#psl-search-form-wrapper button {
+    border: 0 none;
+}
+
 #psl-search-form {
     border: 1px solid black;
     margin-bottom: 2em;
@@ -46,6 +51,7 @@ ul.psl-tabs a {
     justify-content: space-around;
     height: 100%;
     border-bottom: 3px solid transparent;
+    color: black;
 }
 
 ul.psl-tabs a:active,
@@ -74,6 +80,7 @@ ul.psl-tabs li.psl-tab-search input {
 
 ul.psl-tabs li.psl-tab-submit input {
     width: 100%;
+    height: 100%;
 }
 
 #psl-search-form button.reset-tab {
@@ -172,6 +179,7 @@ ul.psl-tabs li.psl-tab-submit input {
 #psl-search-form-text .filter {
     border: 0 none;
     padding: 0.25em 0;
+    display: flex;
 }
 
 #psl-search-form-text .filter input[type="text"] {
