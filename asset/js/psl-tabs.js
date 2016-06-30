@@ -4,13 +4,19 @@
             var container = $(this);
             container.children('ul').find('a').on('click', function(e) {
                 e.preventDefault();
+                var tab = $(this).parents('li').first();
+                var isActive = tab.hasClass('psl-tab-active');
+
                 container.children('div').hide();
-                container.children('div' + $(this).attr('href')).show();
                 container.find('.psl-tab-active').removeClass('psl-tab-active');
-                $(this).parents('li').first().addClass('psl-tab-active');
+
+                if (!isActive) {
+                    container.children('div' + $(this).attr('href')).show();
+                    tab.addClass('psl-tab-active');
+                }
             });
 
-            container.children('ul').find('a').first().click();
+            container.children('div').hide();
         });
     };
 })(jQuery);
