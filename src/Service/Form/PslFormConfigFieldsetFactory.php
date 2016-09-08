@@ -29,26 +29,17 @@
 
 namespace PslSearchForm\Service\Form;
 
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use PslSearchForm\Form\PslFormConfigFieldset;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
 class PslFormConfigFieldsetFactory implements FactoryInterface
 {
-    protected $options = [];
-
-    public function createService(ServiceLocatorInterface $elements)
+    public function __invoke(ContainerInterface $services, $requestedName, array $options = null)
     {
-        $serviceLocator = $elements->getServiceLocator();
-
-        $form = new PslFormConfigFieldset(null, $this->options);
-        $form->setTranslator($serviceLocator->get('MvcTranslator'));
+        $form = new PslFormConfigFieldset(null, $options);
+        $form->setTranslator($services->get('MvcTranslator'));
 
         return $form;
-    }
-
-    public function setCreationOptions($options)
-    {
-        $this->options = $options;
     }
 }

@@ -34,6 +34,7 @@ use Zend\Form\Form;
 use Zend\I18n\Translator\TranslatorAwareInterface;
 use Zend\I18n\Translator\TranslatorAwareTrait;
 use Search\Query;
+use Search\Querier\Exception\QuerierException;
 
 class PslForm extends Form implements TranslatorAwareInterface
 {
@@ -117,19 +118,26 @@ class PslForm extends Form implements TranslatorAwareInterface
         $query->setResources(['items']);
         $query->addFacetField($spatialCoverageField);
 
-        $response = $searchQuerier->query($query);
-
-        $facetCounts = $response->getFacetCounts();
         $locationsOut = [];
-        foreach ($facetCounts[$spatialCoverageField] as $facetCount) {
-            $name = $facetCount['value'];
-            if (isset($locations[$name])) {
-                $locationsOut[$name] = [
-                    'coords' => $locations[$name],
-                    'count' => $facetCount['count'],
-                ];
+        try {
+            $response = $searchQuerier->query($query);
+
+            $facetCounts = $response->getFacetCounts();
+            if (isset($facetCounts[$spatialCoverageField])) {
+                foreach ($facetCounts[$spatialCoverageField] as $facetCount) {
+                    $name = $facetCount['value'];
+                    if (isset($locations[$name])) {
+                        $locationsOut[$name] = [
+                            'coords' => $locations[$name],
+                            'count' => $facetCount['count'],
+                        ];
+                    }
+                }
             }
+        } catch (QuerierException $e) {
+            error_log($e->getMessage());
         }
+
 
         return $locationsOut;
     }

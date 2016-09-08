@@ -29,25 +29,16 @@
 
 namespace PslSearchForm\Service\Form;
 
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 use PslSearchForm\Form\FilterFieldset;
 
 class FilterFieldsetFactory implements FactoryInterface
 {
-    protected $options = [];
-
-    public function createService(ServiceLocatorInterface $elements)
+    public function __invoke(ContainerInterface $services, $requestedName, array $options = null)
     {
-        $serviceLocator = $elements->getServiceLocator();
-
-        $fieldset = new FilterFieldset(null, $this->options);
+        $fieldset = new FilterFieldset(null, $options);
 
         return $fieldset;
-    }
-
-    public function setCreationOptions($options)
-    {
-        $this->options = $options;
     }
 }

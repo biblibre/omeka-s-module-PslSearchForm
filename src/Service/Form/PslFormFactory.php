@@ -30,27 +30,18 @@
 namespace PslSearchForm\Service\Form;
 
 use PslSearchForm\Form\PslForm;
-use Zend\ServiceManager\FactoryInterface;
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Interop\Container\ContainerInterface;
+use Zend\ServiceManager\Factory\FactoryInterface;
 
 class PslFormFactory implements FactoryInterface
 {
-    protected $options = [];
-
-    public function createService(ServiceLocatorInterface $elements)
+    public function __invoke(ContainerInterface $services, $requestedName, array $options = null)
     {
-        $serviceLocator = $elements->getServiceLocator();
-
-        $form = new PslForm(null, $this->options);
-        $form->setTranslator($serviceLocator->get('MvcTranslator'));
-        $form->setApiManager($serviceLocator->get('Omeka\ApiManager'));
-        $form->setFormElementManager($serviceLocator->get('FormElementManager'));
+        $form = new PslForm(null, $options);
+        $form->setTranslator($services->get('MvcTranslator'));
+        $form->setApiManager($services->get('Omeka\ApiManager'));
+        $form->setFormElementManager($services->get('FormElementManager'));
 
         return $form;
-    }
-
-    public function setCreationOptions($options)
-    {
-        $this->options = $options;
     }
 }
