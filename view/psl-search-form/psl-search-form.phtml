@@ -58,15 +58,17 @@
             <button type="button" class="reset-tab" data-tab="itemset"><?php echo $this->translate('Reset'); ?></button>
         </div>
         <div id="psl-search-form-text">
-            <div class="filters">
-                <?php $filters = $form->get('text')->get('filters'); ?>
-                <?php foreach ($filters->getFieldsets() as $fieldset): ?>
-                    <?php echo $this->formCollection($fieldset, true); ?>
-                <?php endforeach; ?>
-                <?php echo $this->formCollection()->renderTemplate($filters); ?>
-                <button type="button" class="psl-add-filter">Add filter</button>
+            <div>
+                <div class="filters">
+                    <?php $filters = $form->get('text')->get('filters'); ?>
+                    <?php foreach ($filters->getFieldsets() as $fieldset): ?>
+                        <?php echo $this->formCollection($fieldset, true); ?>
+                    <?php endforeach; ?>
+                    <?php echo $this->formCollection()->renderTemplate($filters); ?>
+                    <button type="button" class="psl-add-filter"><i class="fa fa-plus"></i></button>
+                </div>
+                <?php echo $this->formRow($form->get('text')->get('creation-year')); ?>
             </div>
-            <?php echo $this->formRow($form->get('text')->get('creation-year')); ?>
             <button type="button" class="reset-tab" data-tab="text"><?php echo $this->translate('Reset'); ?></button>
         </div>
     </div>
