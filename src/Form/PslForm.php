@@ -239,7 +239,9 @@ class PslForm extends Form implements TranslatorAwareInterface
     {
         $api = $this->getApiManager();
 
-        $itemSets = $api->search('item_sets')->getContent();
+        $itemSets = $api->search('item_sets', [
+            'is_public' => true,
+        ])->getContent();
         $options = [];
         foreach ($itemSets as $itemSet) {
             $options[$itemSet->id()] = $itemSet->displayTitle();
