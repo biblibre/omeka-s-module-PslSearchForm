@@ -116,6 +116,10 @@
             var coords = locations[name]['coords'];
             var count = locations[name]['count']
 
+            if (coords.indexOf(',') === -1) {
+                continue;
+            }
+
             var marker = L.marker(coords.split(','), {
                 title: name,
                 opacity: 0.5
