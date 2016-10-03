@@ -45,6 +45,19 @@ class PslFormConfigFieldset extends Fieldset
         $this->add($this->getAdvancedFieldsFieldset());
 
         $this->add([
+            'name' => 'is_public_field',
+            'type' => 'Select',
+            'options' => [
+                'label' => $translator->translate('Is Public field'),
+                'value_options' => $this->getFieldsOptions(),
+                'empty_option' => $translator->translate('None'),
+            ],
+            'attributes' => [
+                'required' => true,
+            ],
+        ]);
+
+        $this->add([
             'name' => 'date_range_field',
             'type' => 'Select',
             'options' => [

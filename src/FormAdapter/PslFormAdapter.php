@@ -58,6 +58,10 @@ class PslFormAdapter implements FormAdapterInterface
     {
         $query = new Query();
 
+        if (isset($formSettings['is_public_field'])) {
+            $query->addFilter($formSettings['is_public_field'], true);
+        }
+
         if (isset($data['q'])) {
             $query->setQuery($data['q']);
         }
