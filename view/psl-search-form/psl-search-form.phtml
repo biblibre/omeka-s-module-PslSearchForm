@@ -165,7 +165,7 @@
             step: 100,
             values: [dateFrom.val() || dateMin, dateTo.val() || dateMax],
             change: function(event, ui) {
-                var from = ui.values[0] > dateMin ? ui.values[0] : '';
+                var from = ui.values[0] > dateMin ? ui.values[0] + 1 : '';
                 var to = ui.values[1] < dateMax ? ui.values[1] : '';
                 if (from != dateFrom.val()) {
                     dateFrom.val(from).change();
