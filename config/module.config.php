@@ -16,5 +16,15 @@ return [
         'form_adapters' => [
             'psl' => 'PslSearchForm\FormAdapter\PslFormAdapter',
         ],
-    ]
+    ],
+    'translator' => [
+        'translation_file_patterns' => [
+            [
+                'type'        => 'gettext',
+                'base_dir'    => __DIR__ . '/../language',
+                'pattern'     => '%s.mo',
+                'text_domain' => null,
+            ],
+        ],
+    ],
 ];
