@@ -141,7 +141,7 @@ msgstr "XVIIIe"
 
 #: view/psl-search-form/psl-search-form.phtml:50
 msgid "19th"
-msgstr "IXXe"
+msgstr "XIXe"
 
 #: view/psl-search-form/psl-search-form.phtml:51
 msgid "20th"
@@ -149,4 +149,4 @@ msgstr "XXe"
 
 #: view/psl-search-form/psl-search-form.phtml:52
 msgid "21th century"
-msgstr "XIe siècle"
+msgstr "XXIe siècle"
