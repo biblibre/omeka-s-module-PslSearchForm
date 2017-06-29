@@ -126,7 +126,17 @@ class PslFormConfigFieldset extends Fieldset
         $weight = 0;
         foreach ($fields as $field) {
             $fieldset = new Fieldset($field['name']);
-            $fieldset->setLabel(sprintf('%s (%s)', $field['label'], $field['name']));
+            $fieldset->setLabel($this->getFieldLabel($field));
+
+            $displayFieldset = new Fieldset('display');
+            $displayFieldset->add([
+                'name' => 'label',
+                'type' => 'Text',
+                'options' => [
+                    'label' => $translator->translate('Label'),
+                ],
+            ]);
+            $fieldset->add($displayFieldset);
 
             $fieldset->add([
                 'name' => 'enabled',
@@ -158,14 +168,18 @@ class PslFormConfigFieldset extends Fieldset
     {
         $searchPage = $this->getOption('search_page');
         $searchAdapter = $searchPage->index()->adapter();
-        return $searchAdapter->getAvailableFields();
+        return $searchAdapter->getAvailableFields($searchPage->index());
     }
 
     protected function getFieldsOptions()
     {
         $options = [];
         foreach ($this->getAvailableFields() as $name => $field) {
-            $options[$name] = sprintf('%s (%s)', $field['label'], $name);
+            if (isset($field['label'])) {
+                $options[$name] = sprintf('%s (%s)', $field['label'], $name);
+            } else {
+                $options[$name] = $name;
+            }
         }
         return $options;
     }
@@ -212,11 +226,34 @@ class PslFormConfigFieldset extends Fieldset
             $response = $searchQuerier->query($query);
 
             $facetCounts = $response->getFacetCounts();
-            foreach ($facetCounts[$spatialCoverageField] as $facetCount) {
-                $locations[] = $facetCount['value'];
+            if (isset($facetCounts[$spatialCoverageField])) {
+                foreach ($facetCounts[$spatialCoverageField] as $facetCount) {
+                    $locations[] = $facetCount['value'];
+                }
             }
         }
 
         return $locations;
+    }
+
+    protected function getFieldLabel($field)
+    {
+        $searchPage = $this->getOption('search_page');
+        $settings = $searchPage->settings();
+
+        $name = $field['name'];
+        $label = isset($field['label']) ? $field['label'] : null;
+        if (isset($settings['form']['advanced-fields'][$name])) {
+            $fieldSettings = $settings['form']['advanced-fields'][$name];
+
+            if (isset($fieldSettings['display']['label'])
+                && $fieldSettings['display']['label'])
+            {
+                $label = $fieldSettings['display']['label'];
+            }
+        }
+        $label = $label ? sprintf('%s (%s)', $label, $field['name']) : $field['name'];
+
+        return $label;
     }
 }
