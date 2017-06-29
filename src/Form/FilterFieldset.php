@@ -65,14 +65,22 @@ class FilterFieldset extends Fieldset
     protected function getFieldOptions()
     {
         $searchPage = $this->getOption('search_page');
-        $availableFields = $searchPage->index()->adapter()->getAvailableFields();
+        $searchIndex = $searchPage->index();
+        $availableFields = $searchIndex->adapter()->getAvailableFields($searchIndex);
         $settings = $searchPage->settings();
         $formSettings = $settings['form'];
 
         $options = [];
         foreach ($formSettings['advanced-fields'] as $name => $field) {
             if ($field['enabled'] && isset($availableFields[$name])) {
-                $options[$name] = $availableFields[$name]['label'];
+                if (isset($field['display']['label']) && $field['display']['label']) {
+                    $label = $field['display']['label'];
+                } elseif (isset($availableFields[$name]['label']) && $availableFields[$name]['label']) {
+                    $label = $availableFields[$name]['label'];
+                } else {
+                    $label = $name;
+                }
+                $options[$name] = $label;
             }
         }
 
