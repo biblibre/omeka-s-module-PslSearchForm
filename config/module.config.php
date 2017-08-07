@@ -12,8 +12,8 @@ return [
             __DIR__ . '/../view',
         ],
     ],
-    'search' => [
-        'form_adapters' => [
+    'search_form_adapters' => [
+        'invokables' => [
             'psl' => 'PslSearchForm\FormAdapter\PslFormAdapter',
         ],
     ],
