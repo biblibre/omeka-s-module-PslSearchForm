@@ -29,12 +29,12 @@
 
 namespace PslSearchForm\Form;
 
+use Search\Query;
 use Zend\Form\Fieldset;
 use Zend\I18n\Translator\TranslatorAwareInterface;
 use Zend\I18n\Translator\TranslatorAwareTrait;
-use Search\Query;
 
-class PslFormConfigFieldset extends Fieldset
+class PslFormConfigFieldset extends Fieldset implements TranslatorAwareInterface
 {
     use TranslatorAwareTrait;
 
