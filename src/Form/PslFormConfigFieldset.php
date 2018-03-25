@@ -215,9 +215,13 @@ class PslFormConfigFieldset extends Fieldset implements TranslatorAwareInterface
 
     protected function getLocations()
     {
+        /** @var \Search\Api\Representation\SearchPageRepresentation $searchPage */
         $searchPage = $this->getOption('search_page');
         $searchQuerier = $searchPage->index()->querier();
-        $spatialCoverageField = $searchPage->settings()['form']['spatial_coverage_field'];
+        $settings = $searchPage->settings();
+        $spatialCoverageField = isset(['form']['spatial_coverage_field'])
+            ? ['form']['spatial_coverage_field']
+            : '';
 
         $locations = [];
         if ($spatialCoverageField) {
