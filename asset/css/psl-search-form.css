@@ -69,6 +69,7 @@ ul.psl-tabs li.psl-tab-active a {
 
 ul.psl-tabs i {
     font-size: 36px;
+    vertical-align: text-top;
 }
 
 ul.psl-tabs li.psl-tab-search input {
@@ -103,6 +104,7 @@ ul.psl-tabs li.psl-tab-submit input {
     border: 0 none;
     position: absolute;
     height: 100%;
+    padding-left: 6px;
 }
 
 #psl-search-form-itemset .field {
