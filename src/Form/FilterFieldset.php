@@ -2,6 +2,7 @@
 
 /*
  * Copyright BibLibre, 2016
+ * Copyright Daniel Berthereau 2018
  *
  * This software is governed by the CeCILL license under French law and abiding
  * by the rules of distribution of free software.  You can use, modify and/ or
@@ -29,6 +30,7 @@
 
 namespace PslSearchForm\Form;
 
+use Zend\Form\Element;
 use Zend\Form\Fieldset;
 
 class FilterFieldset extends Fieldset
@@ -40,21 +42,22 @@ class FilterFieldset extends Fieldset
         ]);
 
         $this->add([
-            'type' => 'Select',
             'name' => 'field',
+            'type' => Element\Select::class,
             'options' => [
                 'value_options' => $this->getFieldOptions(),
             ],
         ]);
 
         $this->add([
-            'type' => 'Text',
             'name' => 'value',
+            'type' => Element\Text::class,
         ]);
     }
 
-    protected function sortByWeight($fields, $settings) {
-        uksort($fields, function($a, $b) use ($settings) {
+    protected function sortByWeight($fields, $settings)
+    {
+        uksort($fields, function ($a, $b) use ($settings) {
             $aWeight = $settings[$a]['weight'];
             $bWeight = $settings[$b]['weight'];
             return $aWeight - $bWeight;

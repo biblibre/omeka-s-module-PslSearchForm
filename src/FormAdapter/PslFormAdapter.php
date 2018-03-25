@@ -2,6 +2,7 @@
 
 /*
  * Copyright BibLibre, 2016
+ * Copyright Daniel Berthereau 2018
  *
  * This software is governed by the CeCILL license under French law and abiding
  * by the rules of distribution of free software.  You can use, modify and/ or
@@ -41,7 +42,7 @@ class PslFormAdapter implements FormAdapterInterface
 
     public function getFormClass()
     {
-        return  'PslSearchForm\Form\PslForm';
+        return  \PslSearchForm\Form\PslForm::class;
     }
 
     public function getFormPartial()
@@ -51,7 +52,7 @@ class PslFormAdapter implements FormAdapterInterface
 
     public function getConfigFormClass()
     {
-        return 'PslSearchForm\Form\PslFormConfigFieldset';
+        return \PslSearchForm\Form\PslFormConfigFieldset::class;
     }
 
     public function toQuery($data, $formSettings)

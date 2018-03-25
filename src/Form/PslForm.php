@@ -2,6 +2,7 @@
 
 /*
  * Copyright BibLibre, 2016
+ * Copyright Daniel Berthereau 2018
  *
  * This software is governed by the CeCILL license under French law and abiding
  * by the rules of distribution of free software.  You can use, modify and/ or
@@ -29,17 +30,22 @@
 
 namespace PslSearchForm\Form;
 
+use Omeka\Api\Manager;
+use Search\Query;
+use Search\Querier\Exception\QuerierException;
+use Zend\Form\Element;
 use Zend\Form\Fieldset;
 use Zend\Form\Form;
 use Zend\I18n\Translator\TranslatorAwareInterface;
 use Zend\I18n\Translator\TranslatorAwareTrait;
-use Search\Query;
-use Search\Querier\Exception\QuerierException;
 
 class PslForm extends Form implements TranslatorAwareInterface
 {
     use TranslatorAwareTrait;
 
+    /**
+     * @var Manager
+     */
     protected $apiManager;
 
     public function init()
@@ -50,12 +56,12 @@ class PslForm extends Form implements TranslatorAwareInterface
 
         $this->add([
             'name' => 'q',
-            'type' => 'Text',
+            'type' => Element\Text::class,
             'options' => [
-                'label' => $translator->translate('Search'),
+                'label' => $translator->translate('Search'), // @translate
             ],
             'attributes' => [
-                'placeholder' => $translator->translate('Search'),
+                'placeholder' => $translator->translate('Search'), // @translate
             ],
         ]);
 
@@ -66,9 +72,9 @@ class PslForm extends Form implements TranslatorAwareInterface
 
         $this->add([
             'name' => 'submit',
-            'type' => 'Submit',
+            'type' => Element\Submit::class,
             'attributes' => [
-                'value' => $translator->translate('Submit'),
+                'value' => $translator->translate('Submit'), // @translate
                 'type' => 'submit',
             ],
         ]);
@@ -84,7 +90,7 @@ class PslForm extends Form implements TranslatorAwareInterface
         return $inputFilter;
     }
 
-    public function setApiManager($apiManager)
+    public function setApiManager(Manager $apiManager)
     {
         $this->apiManager = $apiManager;
     }
@@ -138,7 +144,6 @@ class PslForm extends Form implements TranslatorAwareInterface
             error_log($e->getMessage());
         }
 
-
         return $locationsOut;
     }
 
@@ -147,8 +152,8 @@ class PslForm extends Form implements TranslatorAwareInterface
         $fieldset = new Fieldset('map');
 
         $fieldset->add([
-            'type' => 'Hidden',
             'name' => 'spatial-coverage',
+            'type' => Element\Hidden::class,
         ]);
 
         return $fieldset;
@@ -157,27 +162,27 @@ class PslForm extends Form implements TranslatorAwareInterface
     protected function dateFieldset()
     {
         $fieldset = new Fieldset('date');
-        $fieldset->setLabel($this->translate('date'));
+        $fieldset->setLabel($this->translate('date')); // @translate
 
         $fieldset->add([
             'name' => 'from',
-            'type' => 'Text',
+            'type' => Element\Text::class,
             'options' => [
-                'label' => $this->translate('From year'),
+                'label' => $this->translate('From year'), // @translate
             ],
             'attributes' => [
-                'placeholder' => 'YYYY',
+                'placeholder' => 'YYYY', // @translate
             ],
         ]);
 
         $fieldset->add([
             'name' => 'to',
-            'type' => 'Text',
+            'type' => Element\Text::class,
             'options' => [
-                'label' => $this->translate('To year'),
+                'label' => $this->translate('To year'), // @translate
             ],
             'attributes' => [
-                'placeholder' => 'YYYY',
+                'placeholder' => 'YYYY', // @translate
             ],
         ]);
 
@@ -190,9 +195,9 @@ class PslForm extends Form implements TranslatorAwareInterface
 
         $fieldset->add([
             'name' => 'ids',
-            'type' => 'MultiCheckbox',
+            'type' => Element\MultiCheckbox::class,
             'options' => [
-                'label' => $this->translate('Collections'),
+                'label' => $this->translate('Collections'), // @translate
                 'value_options' => $this->getItemSetsOptions(),
             ],
         ]);
@@ -205,10 +210,10 @@ class PslForm extends Form implements TranslatorAwareInterface
         $fieldset = new Fieldset('text');
 
         $fieldset->add([
-            'type' => 'Collection',
             'name' => 'filters',
+            'type' => Element\Collection::class,
             'options' => [
-                'label' => 'Filters',
+                'label' => 'Filters', // @translate
                 'count' => 2,
                 'should_create_template' => true,
                 'allow_add' => true,
@@ -217,13 +222,13 @@ class PslForm extends Form implements TranslatorAwareInterface
         ]);
 
         $fieldset->add([
-            'type' => 'Text',
             'name' => 'creation-year',
+            'type' => Element\Text::class,
             'options' => [
-                'label' => $this->translate('Creation year'),
+                'label' => $this->translate('Creation year'), // @translate
             ],
             'attributes' => [
-                'placeholder' => $this->translate('YYYY'),
+                'placeholder' => $this->translate('YYYY'), // @translate
             ],
         ]);
 
@@ -259,6 +264,6 @@ class PslForm extends Form implements TranslatorAwareInterface
     protected function getFilterFieldset()
     {
         $options = $this->getOptions();
-        return $this->getForm('PslSearchForm\Form\FilterFieldset', $options);
+        return $this->getForm(FilterFieldset::class, $options);
     }
 }

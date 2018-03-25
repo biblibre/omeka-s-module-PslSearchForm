@@ -2,8 +2,6 @@
 
 namespace PslSearchFormTest\Controller;
 
-use PslSearchFormTest\Controller\PslSearchFormControllerTestCase;
-
 class IndexControllerTest extends PslSearchFormControllerTestCase
 {
     protected $site;
