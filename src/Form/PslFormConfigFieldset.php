@@ -46,16 +46,19 @@ class PslFormConfigFieldset extends Fieldset implements TranslatorAwareInterface
 
         $this->add($this->getAdvancedFieldsFieldset());
 
+        $fieldOptions = $this->getFieldsOptions();
+
         $this->add([
             'name' => 'is_public_field',
             'type' => Element\Select::class,
             'options' => [
                 'label' => $translator->translate('Is Public field'), // @translate
-                'value_options' => $this->getFieldsOptions(),
+                'value_options' => $fieldOptions,
                 'empty_option' => $translator->translate('None'), // @translate
             ],
             'attributes' => [
                 'required' => true,
+                'class' => 'chosen-select',
             ],
         ]);
 
@@ -64,11 +67,12 @@ class PslFormConfigFieldset extends Fieldset implements TranslatorAwareInterface
             'type' => Element\Select::class, // @translate
             'options' => [
                 'label' => $translator->translate('Date range field'), // @translate
-                'value_options' => $this->getFieldsOptions(),
+                'value_options' => $fieldOptions,
                 'empty_option' => $translator->translate('None'),
             ],
             'attributes' => [
                 'required' => true,
+                'class' => 'chosen-select',
             ],
         ]);
 
@@ -77,11 +81,12 @@ class PslFormConfigFieldset extends Fieldset implements TranslatorAwareInterface
             'type' => Element\Select::class,
             'options' => [
                 'label' => $translator->translate('Item set id field'), // @translate
-                'value_options' => $this->getFieldsOptions(),
+                'value_options' => $fieldOptions,
                 'empty_option' => $translator->translate('None'), // @translate
             ],
             'attributes' => [
                 'required' => true,
+                'class' => 'chosen-select',
             ],
         ]);
 
@@ -90,11 +95,12 @@ class PslFormConfigFieldset extends Fieldset implements TranslatorAwareInterface
             'type' => Element\Select::class,
             'options' => [
                 'label' => $translator->translate('Creation year field'), // @translate
-                'value_options' => $this->getFieldsOptions(),
+                'value_options' => $fieldOptions,
                 'empty_option' => $translator->translate('None'), // @translate
             ],
             'attributes' => [
                 'required' => true,
+                'class' => 'chosen-select',
             ],
         ]);
 
@@ -103,11 +109,12 @@ class PslFormConfigFieldset extends Fieldset implements TranslatorAwareInterface
             'type' => Element\Select::class,
             'options' => [
                 'label' => $translator->translate('Spatial coverage field'), // @translate
-                'value_options' => $this->getFieldsOptions(),
+                'value_options' => $fieldOptions,
                 'empty_option' => $translator->translate('None'), // @translate
             ],
             'attributes' => [
                 'required' => true,
+                'class' => 'chosen-select',
             ],
         ]);
 
