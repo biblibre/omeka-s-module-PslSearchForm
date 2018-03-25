@@ -30,11 +30,48 @@
 namespace PslSearchForm;
 
 use Omeka\Module\AbstractModule;
+use Zend\EventManager\Event;
+use Zend\EventManager\SharedEventManagerInterface;
 
 class Module extends AbstractModule
 {
     public function getConfig()
     {
         return include __DIR__ . '/config/module.config.php';
+    }
+
+    public function attachListeners(SharedEventManagerInterface $sharedEventManager)
+    {
+        // TODO How to attach all public events only?
+        $sharedEventManager->attach(
+            '*',
+            'view.layout',
+            [$this, 'publicViewLayout']
+        );
+    }
+
+    /**
+     * Preload the search form styles and scripts.
+     *
+     * @param Event $event
+     */
+    public function publicViewLayout(Event $event)
+    {
+        $view = $event->getTarget();
+        // Some pages may be neither site nor admin.
+        if (!$view->params()->fromRoute('__SITE__')) {
+            return;
+        }
+
+        $searchPageId = $view->themeSetting('search_page_id');
+        if (!$searchPageId) {
+            return;
+        }
+
+        /** @var \Search\Api\Representation\SearchPageRepresentation $searchPage */
+        $searchPage = $view->api()->read('search_pages', $searchPageId)->getContent();
+        if ($searchPage->form() instanceof \PslSearchForm\Form\PslForm) {
+            $view->partial('psl-search-form/psl-search-form-layout');
+        }
     }
 }
