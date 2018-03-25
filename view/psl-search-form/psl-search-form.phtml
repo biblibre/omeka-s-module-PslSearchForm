@@ -1,10 +1,10 @@
 <?php
-    $this->headScript()->appendFile($this->assetUrl('jquery-ui.min.js', 'jQueryUI'));
     $this->headLink()->appendStylesheet($this->assetUrl('jquery-ui.min.css', 'jQueryUI'));
-    $this->headScript()->appendFile($this->assetUrl('leaflet/leaflet.js', 'PslSearchForm'));
-    $this->headLink()->appendStylesheet($this->assetUrl('leaflet/leaflet.css', 'PslSearchForm'));
-    $this->headScript()->appendFile($this->assetUrl('js/psl-tabs.js', 'PslSearchForm'));
+    $this->headScript()->appendFile($this->assetUrl('jquery-ui.min.js', 'jQueryUI'));
+    $this->headLink()->appendStylesheet($this->assetUrl('vendor/leaflet/leaflet.css', 'PslSearchForm'));
+    $this->headScript()->appendFile($this->assetUrl('vendor/leaflet/leaflet.js', 'PslSearchForm'));
     $this->headLink()->appendStylesheet($this->assetUrl('css/psl-form.css', 'PslSearchForm'));
+    $this->headScript()->appendFile($this->assetUrl('js/psl-tabs.js', 'PslSearchForm'));
 ?>
 
 <?php $form->prepare(); ?>
