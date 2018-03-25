@@ -1,5 +1,9 @@
 #psl-search-form-wrapper .psl-new-search {
     background: lightgreen;
+    visibility: hidden;
+}
+#psl-search-form > div {
+    display: none;
 }
 
 #psl-search-form-wrapper input[type="submit"],
