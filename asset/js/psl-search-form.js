@@ -13,6 +13,9 @@
                 if (!isActive) {
                     container.children('div' + $(this).attr('href')).show();
                     tab.addClass('psl-tab-active');
+                    if (typeof window.pslTabMap !== 'undefined' && tab.hasClass('psl-tab-map')) {
+                        window.pslTabMap.invalidateSize();
+                    }
                 }
             });
 
@@ -58,6 +61,7 @@ $(document).ready(function() {
         scrollWheelZoom: false,
         attributionControl: false
     }).setView(defaultLocation, defaultZoom);
+    window.pslTabMap = map;
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
