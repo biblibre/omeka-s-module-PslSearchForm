@@ -56,7 +56,7 @@ $(document).ready(function() {
         attributionControl: false
     }).setView([50.695, -5.537], 3);
 
-    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png').addTo(map);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
     for (name in locations) {
         var coords = locations[name]['coords'];
