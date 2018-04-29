@@ -226,8 +226,8 @@ class PslFormConfigFieldset extends Fieldset implements TranslatorAwareInterface
         $searchPage = $this->getOption('search_page');
         $searchQuerier = $searchPage->index()->querier();
         $settings = $searchPage->settings();
-        $spatialCoverageField = isset(['form']['spatial_coverage_field'])
-            ? ['form']['spatial_coverage_field']
+        $spatialCoverageField = isset($settings['form']['spatial_coverage_field'])
+            ? $settings['form']['spatial_coverage_field']
             : '';
 
         $locations = [];
