@@ -22,6 +22,9 @@
 })(jQuery);
 
 $(document).ready(function() {
+    var defaultLocation = [50.695, -5.537];
+    var defaultZoom = 3;
+
     var markers = [];
 
     var selectMarker = function(marker) {
@@ -54,7 +57,7 @@ $(document).ready(function() {
     var map = L.map('psl-search-form-leaflet-map', {
         scrollWheelZoom: false,
         attributionControl: false
-    }).setView([50.695, -5.537], 3);
+    }).setView(defaultLocation, defaultZoom);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
