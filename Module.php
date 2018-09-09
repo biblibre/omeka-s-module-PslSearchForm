@@ -63,14 +63,18 @@ class Module extends AbstractModule
             return;
         }
 
-        $searchPageId = $view->themeSetting('search_page_id');
-        if (!$searchPageId) {
+        if (!$view->getHelperPluginManager()->has('searchForm')) {
+            return;
+        }
+
+        $searchMainPage = $view->siteSetting('search_main_page');
+        if (!$searchMainPage) {
             return;
         }
 
         /** @var \Search\Api\Representation\SearchPageRepresentation $searchPage */
-        $searchPage = $view->api()->read('search_pages', $searchPageId)->getContent();
-        if ($searchPage->form() instanceof \PslSearchForm\Form\PslForm) {
+        $searchPage = $view->api()->searchOne('search_pages', ['id' => $searchMainPage])->getContent();
+        if ($searchPage && $searchPage->form() instanceof \PslSearchForm\Form\PslForm) {
             $view->partial('psl-search-form/psl-search-form-layout');
         }
     }
