@@ -55,7 +55,7 @@ class PslFormAdapter implements FormAdapterInterface
         return \PslSearchForm\Form\PslFormConfigFieldset::class;
     }
 
-    public function toQuery($data, $formSettings)
+    public function toQuery(array $request, array $formSettings)
     {
         $query = new Query();
 
@@ -63,40 +63,40 @@ class PslFormAdapter implements FormAdapterInterface
             $query->addFilter($formSettings['is_public_field'], true);
         }
 
-        if (isset($data['q'])) {
-            $query->setQuery($data['q']);
+        if (isset($request['q'])) {
+            $query->setQuery($request['q']);
         }
 
-        if (!empty($data['map']['spatial-coverage'])) {
+        if (!empty($request['map']['spatial-coverage'])) {
             $field = $formSettings['spatial_coverage_field'];
-            $query->addFilter($field, $data['map']['spatial-coverage']);
+            $query->addFilter($field, $request['map']['spatial-coverage']);
         }
 
-        if (isset($data['date']['from']) || isset($data['date']['to'])) {
+        if (isset($request['date']['from']) || isset($request['date']['to'])) {
             $field = $formSettings['date_range_field'];
-            $start = $data['date']['from'];
-            $end = $data['date']['to'];
+            $start = $request['date']['from'];
+            $end = $request['date']['to'];
             if ($start || $end) {
                 $query->addDateRangeFilter($field, $start, $end);
             }
         }
 
-        if (isset($data['itemSet']['ids'])) {
+        if (isset($request['itemSet']['ids'])) {
             $field = $formSettings['item_set_id_field'];
-            $query->addFilter($field, $data['itemSet']['ids']);
+            $query->addFilter($field, $request['itemSet']['ids']);
         }
 
-        if (isset($data['text']['filters'])) {
-            foreach ($data['text']['filters'] as $filter) {
+        if (isset($request['text']['filters'])) {
+            foreach ($request['text']['filters'] as $filter) {
                 if (!empty($filter['value'])) {
                     $query->addFilter($filter['field'], $filter['value']);
                 }
             }
         }
 
-        if (!empty($data['text']['creation-year'])) {
+        if (!empty($request['text']['creation-year'])) {
             $field = $formSettings['creation_year_field'];
-            $query->addFilter($field, $data['text']['creation-year']);
+            $query->addFilter($field, $request['text']['creation-year']);
         }
 
         return $query;
