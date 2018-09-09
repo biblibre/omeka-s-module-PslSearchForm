@@ -33,17 +33,11 @@ namespace PslSearchForm\Form;
 use Search\Query;
 use Zend\Form\Element;
 use Zend\Form\Fieldset;
-use Zend\I18n\Translator\TranslatorAwareInterface;
-use Zend\I18n\Translator\TranslatorAwareTrait;
 
-class PslFormConfigFieldset extends Fieldset implements TranslatorAwareInterface
+class PslFormConfigFieldset extends Fieldset
 {
-    use TranslatorAwareTrait;
-
     public function init()
     {
-        $translator = $this->getTranslator();
-
         $this->add($this->getAdvancedFieldsFieldset());
 
         $fieldOptions = $this->getFieldsOptions();
@@ -52,9 +46,9 @@ class PslFormConfigFieldset extends Fieldset implements TranslatorAwareInterface
             'name' => 'is_public_field',
             'type' => Element\Select::class,
             'options' => [
-                'label' => $translator->translate('Is Public field'), // @translate
+                'label' => 'Is Public field', // @translate
                 'value_options' => $fieldOptions,
-                'empty_option' => $translator->translate('None'), // @translate
+                'empty_option' => 'None', // @translate
             ],
             'attributes' => [
                 'required' => true,
@@ -66,9 +60,9 @@ class PslFormConfigFieldset extends Fieldset implements TranslatorAwareInterface
             'name' => 'date_range_field',
             'type' => Element\Select::class, // @translate
             'options' => [
-                'label' => $translator->translate('Date range field'), // @translate
+                'label' => 'Date range field', // @translate
                 'value_options' => $fieldOptions,
-                'empty_option' => $translator->translate('None'),
+                'empty_option' => 'None', // @translate
             ],
             'attributes' => [
                 'required' => true,
@@ -80,9 +74,9 @@ class PslFormConfigFieldset extends Fieldset implements TranslatorAwareInterface
             'name' => 'item_set_id_field',
             'type' => Element\Select::class,
             'options' => [
-                'label' => $translator->translate('Item set id field'), // @translate
+                'label' => 'Item set id field', // @translate
                 'value_options' => $fieldOptions,
-                'empty_option' => $translator->translate('None'), // @translate
+                'empty_option' => 'None', // @translate
             ],
             'attributes' => [
                 'required' => true,
@@ -94,9 +88,9 @@ class PslFormConfigFieldset extends Fieldset implements TranslatorAwareInterface
             'name' => 'creation_year_field',
             'type' => Element\Select::class,
             'options' => [
-                'label' => $translator->translate('Creation year field'), // @translate
+                'label' => 'Creation year field', // @translate
                 'value_options' => $fieldOptions,
-                'empty_option' => $translator->translate('None'), // @translate
+                'empty_option' => 'None', // @translate
             ],
             'attributes' => [
                 'required' => true,
@@ -108,9 +102,9 @@ class PslFormConfigFieldset extends Fieldset implements TranslatorAwareInterface
             'name' => 'spatial_coverage_field',
             'type' => Element\Select::class,
             'options' => [
-                'label' => $translator->translate('Spatial coverage field'), // @translate
+                'label' => 'Spatial coverage field', // @translate
                 'value_options' => $fieldOptions,
-                'empty_option' => $translator->translate('None'), // @translate
+                'empty_option' => 'None', // @translate
             ],
             'attributes' => [
                 'required' => true,
@@ -123,11 +117,10 @@ class PslFormConfigFieldset extends Fieldset implements TranslatorAwareInterface
 
     protected function getAdvancedFieldsFieldset()
     {
-        $translator = $this->getTranslator();
-
         $advancedFieldsFieldset = new Fieldset('advanced-fields');
-        $advancedFieldsFieldset->setLabel($translator->translate('Advanced search fields')); // @translate
+        $advancedFieldsFieldset->setLabel('Advanced search fields'); // @translate
         $advancedFieldsFieldset->setAttribute('data-sortable', '1');
+        $advancedFieldsFieldset->setAttribute('data-ordered', '0');
 
         $fields = $this->getAvailableFields();
         $weights = range(0, count($fields));
@@ -142,7 +135,7 @@ class PslFormConfigFieldset extends Fieldset implements TranslatorAwareInterface
                 'name' => 'label',
                 'type' => Element\Text::class,
                 'options' => [
-                    'label' => $translator->translate('Label'), // @translate
+                    'label' => 'Label', // @translate
                 ],
             ]);
             $fieldset->add($displayFieldset);
@@ -151,7 +144,7 @@ class PslFormConfigFieldset extends Fieldset implements TranslatorAwareInterface
                 'name' => 'enabled',
                 'type' => Element\Checkbox::class,
                 'options' => [
-                    'label' => $translator->translate('Enabled'), // @translate
+                    'label' => 'Enabled', // @translate
                 ],
             ]);
 
@@ -159,7 +152,7 @@ class PslFormConfigFieldset extends Fieldset implements TranslatorAwareInterface
                 'name' => 'weight',
                 'type' => Element\Select::class,
                 'options' => [
-                    'label' => $translator->translate('Weight'), // @translate
+                    'label' => 'Weight', // @translate
                     'value_options' => $weight_options,
                 ],
                 'attributes' => [
@@ -195,13 +188,11 @@ class PslFormConfigFieldset extends Fieldset implements TranslatorAwareInterface
 
     protected function getLocationsFieldset()
     {
-        $translator = $this->getTranslator();
-
         $fieldset = new Fieldset('locations');
 
         $locations = $this->getLocations();
         if (!empty($locations)) {
-            $fieldset->setLabel($translator->translate('Locations')); // @translate
+            $fieldset->setLabel('Locations'); // @translate
 
             foreach ($this->getLocations() as $location) {
                 $fieldset->add([
@@ -211,7 +202,7 @@ class PslFormConfigFieldset extends Fieldset implements TranslatorAwareInterface
                         'label' => $location,
                     ],
                     'attributes' => [
-                        'placeholder' => $translator->translate('Latitude, Longitude'), // @translate
+                        'placeholder' => 'Latitude, Longitude', // @translate
                     ],
                 ]);
             }
