@@ -36,13 +36,9 @@ use Search\Querier\Exception\QuerierException;
 use Zend\Form\Element;
 use Zend\Form\Fieldset;
 use Zend\Form\Form;
-use Zend\I18n\Translator\TranslatorAwareInterface;
-use Zend\I18n\Translator\TranslatorAwareTrait;
 
-class PslForm extends Form implements TranslatorAwareInterface
+class PslForm extends Form
 {
-    use TranslatorAwareTrait;
-
     /**
      * @var Manager
      */
@@ -50,18 +46,17 @@ class PslForm extends Form implements TranslatorAwareInterface
 
     public function init()
     {
-        $translator = $this->getTranslator();
-
+        // TODO Keep csrf in psl search form.
         $this->remove('csrf');
 
         $this->add([
             'name' => 'q',
             'type' => Element\Text::class,
             'options' => [
-                'label' => $translator->translate('Search'), // @translate
+                'label' => 'Search', // @translate
             ],
             'attributes' => [
-                'placeholder' => $translator->translate('Search'), // @translate
+                'placeholder' => 'Search', // @translate
             ],
         ]);
 
@@ -74,7 +69,7 @@ class PslForm extends Form implements TranslatorAwareInterface
             'name' => 'submit',
             'type' => Element\Submit::class,
             'attributes' => [
-                'value' => $translator->translate('Submit'), // @translate
+                'value' => 'Submit', // @translate
                 'type' => 'submit',
             ],
         ]);
@@ -162,13 +157,13 @@ class PslForm extends Form implements TranslatorAwareInterface
     protected function dateFieldset()
     {
         $fieldset = new Fieldset('date');
-        $fieldset->setLabel($this->translate('date')); // @translate
+        $fieldset->setLabel('date'); // @translate
 
         $fieldset->add([
             'name' => 'from',
             'type' => Element\Text::class,
             'options' => [
-                'label' => $this->translate('From year'), // @translate
+                'label' => 'From year', // @translate
             ],
             'attributes' => [
                 'placeholder' => 'YYYY', // @translate
@@ -179,7 +174,7 @@ class PslForm extends Form implements TranslatorAwareInterface
             'name' => 'to',
             'type' => Element\Text::class,
             'options' => [
-                'label' => $this->translate('To year'), // @translate
+                'label' => 'To year', // @translate
             ],
             'attributes' => [
                 'placeholder' => 'YYYY', // @translate
@@ -197,7 +192,7 @@ class PslForm extends Form implements TranslatorAwareInterface
             'name' => 'ids',
             'type' => Element\MultiCheckbox::class,
             'options' => [
-                'label' => $this->translate('Collections'), // @translate
+                'label' => 'Collections', // @translate
                 'value_options' => $this->getItemSetsOptions(),
             ],
         ]);
@@ -225,19 +220,14 @@ class PslForm extends Form implements TranslatorAwareInterface
             'name' => 'creation-year',
             'type' => Element\Text::class,
             'options' => [
-                'label' => $this->translate('Creation year'), // @translate
+                'label' => 'Creation year', // @translate
             ],
             'attributes' => [
-                'placeholder' => $this->translate('YYYY'), // @translate
+                'placeholder' => 'YYYY', // @translate
             ],
         ]);
 
         return $fieldset;
-    }
-
-    protected function translate($string)
-    {
-        return $this->getTranslator()->translate($string);
     }
 
     protected function getItemSetsOptions()

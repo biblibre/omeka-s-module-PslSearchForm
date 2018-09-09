@@ -1,53 +1,56 @@
-<?php // Scripts are loaded via an event that loads psl-search-form-external. ?>
-<?php $form->prepare(); ?>
+<?php
+$translate = $this->plugin('translate');
+// Scripts are loaded via an event that loads psl-search-form-external.
+$form->prepare();
+?>
 <?php echo $this->form()->openTag($form); ?>
 
 <div id="psl-search-form-wrapper">
-    <button type="button" class="psl-new-search"><?php echo $this->translate('New search'); ?></button>
+    <button type="button" class="psl-new-search"><?php echo $translate('New search'); ?></button>
     <div id="psl-search-form">
         <ul class="psl-tabs">
             <li class="psl-tab-map">
-                <a href="#psl-search-form-map" title="<?php echo $this->translate('Location'); ?>"><i class="fa fa-map-marker"></i></a>
+                <a href="#psl-search-form-map" title="<?php echo $translate('Location'); ?>"><i class="fa fa-map-marker"></i></a>
             </li>
             <li class="psl-tab-date">
-                <a href="#psl-search-form-date" title="<?php echo $this->translate('Time period'); ?>"><i class="fa fa-hourglass-half"></i></a>
+                <a href="#psl-search-form-date" title="<?php echo $translate('Time period'); ?>"><i class="fa fa-hourglass-half"></i></a>
             </li>
             <li class="psl-tab-itemset">
-                <a href="#psl-search-form-itemset" title="<?php echo $this->translate('Collections'); ?>"><i class="fa fa-book"></i></a>
+                <a href="#psl-search-form-itemset" title="<?php echo $translate('Collections'); ?>"><i class="fa fa-book"></i></a>
             </li>
             <li class="psl-tab-search">
                 <button type="button" class="reset-tab" data-tab="search"><i class="fa fa-times-circle fa-times-circle-o"></i></button>
                 <?php echo $this->formText($form->get('q')); ?>
             </li>
             <li class="psl-tab-text">
-                <a href="#psl-search-form-text" title="<?php echo $this->translate('More'); ?>"><i class="fa fa-plus"></i></a>
+                <a href="#psl-search-form-text" title="<?php echo $translate('More'); ?>"><i class="fa fa-plus"></i></a>
             </li>
             <li class="psl-tab-submit"><input type="submit" value="OK"/></li>
         </ul>
         <div id="psl-search-form-map">
             <?php echo $this->formCollection($form->get('map'), false); ?>
             <div id="psl-search-form-leaflet-map"></div>
-            <button type="button" class="reset-tab" data-tab="map"><?php echo $this->translate('Reset'); ?></button>
+            <button type="button" class="reset-tab" data-tab="map"><?php echo $translate('Reset'); ?></button>
         </div>
         <div id="psl-search-form-date">
-            <label><?php echo $this->translate('Time period'); ?></label>
+            <label><?php echo $translate('Time period'); ?></label>
             <?php echo $this->formCollection($form->get('date'), false); ?>
             <div id="psl-search-form-date-slider"></div>
             <div id="psl-search-form-date-graduations">
-                <div><?php echo $this->translate('14th century'); ?></div>
-                <div><?php echo $this->translate('15th'); ?></div>
-                <div><?php echo $this->translate('16th'); ?></div>
-                <div><?php echo $this->translate('17th'); ?></div>
-                <div><?php echo $this->translate('18th'); ?></div>
-                <div><?php echo $this->translate('19th'); ?></div>
-                <div><?php echo $this->translate('20th'); ?></div>
-                <div><?php echo $this->translate('21th century'); ?></div>
+                <div><?php echo $translate('14th century'); ?></div>
+                <div><?php echo $translate('15th'); ?></div>
+                <div><?php echo $translate('16th'); ?></div>
+                <div><?php echo $translate('17th'); ?></div>
+                <div><?php echo $translate('18th'); ?></div>
+                <div><?php echo $translate('19th'); ?></div>
+                <div><?php echo $translate('20th'); ?></div>
+                <div><?php echo $translate('21th century'); ?></div>
             </div>
-            <button type="button" class="reset-tab" data-tab="date"><?php echo $this->translate('Reset'); ?></button>
+            <button type="button" class="reset-tab" data-tab="date"><?php echo $translate('Reset'); ?></button>
         </div>
         <div id="psl-search-form-itemset">
             <?php echo $this->formCollection($form->get('itemSet'), false); ?>
-            <button type="button" class="reset-tab" data-tab="itemset"><?php echo $this->translate('Reset'); ?></button>
+            <button type="button" class="reset-tab" data-tab="itemset"><?php echo $translate('Reset'); ?></button>
         </div>
         <div id="psl-search-form-text">
             <div>
@@ -61,7 +64,7 @@
                 </div>
                 <?php echo $this->formRow($form->get('text')->get('creation-year')); ?>
             </div>
-            <button type="button" class="reset-tab" data-tab="text"><?php echo $this->translate('Reset'); ?></button>
+            <button type="button" class="reset-tab" data-tab="text"><?php echo $translate('Reset'); ?></button>
         </div>
     </div>
 </div>
