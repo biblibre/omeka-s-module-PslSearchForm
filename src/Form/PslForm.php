@@ -70,16 +70,12 @@ class PslForm extends Form
                 'type' => 'submit',
             ],
         ]);
-    }
 
-    public function getInputFilter()
-    {
-        $inputFilter = parent::getInputFilter();
-
-        $itemSetIds = $inputFilter->get('itemSet')->get('ids');
-        $itemSetIds->setRequired(false);
-
-        return $inputFilter;
+        $inputFilter = $this->getInputFilter();
+        $inputFilter->get('itemSet')->add([
+            'name' => 'ids',
+            'required' => false,
+        ]);
     }
 
     public function setApiManager(Manager $apiManager)
