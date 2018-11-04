@@ -5,7 +5,12 @@
  */
 
 $translate = $this->plugin('translate');
+$formCollection = $this->plugin('formCollection');
 $formElement = $this->plugin('formElement');
+
+$params = $this->params()->fromQuery();
+$form->setData($params);
+
 // Scripts in psl-search-form-layout.phtml are loaded via an event that loads psl-search-form-external.
 $form->prepare();
 ?>
@@ -34,13 +39,13 @@ $form->prepare();
             <li class="psl-tab-submit"><input type="submit" value="OK"/></li>
         </ul>
         <div id="psl-search-form-map">
-            <?php echo $this->formCollection($form->get('map'), false); ?>
+            <?php echo $formCollection($form->get('map'), false); ?>
             <div id="psl-search-form-leaflet-map"></div>
             <button type="button" class="reset-tab" data-tab="map"><?php echo $translate('Reset'); ?></button>
         </div>
         <div id="psl-search-form-date">
             <label><?php echo $translate('Time period'); ?></label>
-            <?php echo $this->formCollection($form->get('date'), false); ?>
+            <?php echo $formCollection($form->get('date'), false); ?>
             <div id="psl-search-form-date-slider"></div>
             <div id="psl-search-form-date-graduations">
                 <div><?php echo $translate('14th century'); ?></div>
@@ -55,7 +60,7 @@ $form->prepare();
             <button type="button" class="reset-tab" data-tab="date"><?php echo $translate('Reset'); ?></button>
         </div>
         <div id="psl-search-form-itemset">
-            <?php echo $this->formCollection($form->get('itemSet'), false); ?>
+            <?php echo $formCollection($form->get('itemSet'), false); ?>
             <button type="button" class="reset-tab" data-tab="itemset"><?php echo $translate('Reset'); ?></button>
         </div>
         <div id="psl-search-form-text">
@@ -66,9 +71,9 @@ $form->prepare();
                 <?php $filters = $textFieldset->get('filters'); ?>
                 <div class="filters">
                     <?php foreach ($filters->getFieldsets() as $fieldset): ?>
-                        <?php echo $this->formCollection($fieldset, true); ?>
+                        <?php echo $formCollection($fieldset, true); ?>
                     <?php endforeach; ?>
-                    <?php echo $this->formCollection()->renderTemplate($filters); ?>
+                    <?php echo $formCollection()->renderTemplate($filters); ?>
                     <button type="button" class="psl-add-filter"><i class="fa fa-plus"></i></button>
                 </div>
                 <?php endif; ?>
