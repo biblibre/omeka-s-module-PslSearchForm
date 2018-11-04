@@ -7,6 +7,7 @@ $this->headLink()->appendStylesheet($this->assetUrl('jquery-ui.min.css', 'jQuery
 $this->headLink()->appendStylesheet($this->assetUrl('vendor/leaflet/leaflet.css', 'PslSearchForm'));
 $this->headLink()->appendStylesheet($this->assetUrl('css/psl-search-form.css', 'PslSearchForm'));
 
-$this->headScript()->appendFile($this->assetUrl('jquery-ui.min.js', 'jQueryUI'));
-$this->headScript()->appendFile($this->assetUrl('vendor/leaflet/leaflet.js', 'PslSearchForm'));
-$this->headScript()->appendFile($this->assetUrl('js/psl-search-form.js', 'PslSearchForm'));
+// Js are prepended to avoid issues with module Mapping, that uses leaflet too..
+$this->headScript()->prependFile($this->assetUrl('js/psl-search-form.js', 'PslSearchForm'));
+$this->headScript()->prependFile($this->assetUrl('vendor/leaflet/leaflet.js', 'PslSearchForm'));
+$this->headScript()->prependFile($this->assetUrl('jquery-ui.min.js', 'jQueryUI'));
