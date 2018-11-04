@@ -11,7 +11,7 @@ return [
         'factories' => [
             Form\PslForm::class => Service\Form\PslFormFactory::class,
             Form\FilterFieldset::class => Service\Form\FilterFieldsetFactory::class,
-            Form\PslFormConfigFieldset::class => Service\Form\PslFormConfigFieldsetFactory::class,
+            Form\Admin\PslFormConfigFieldset::class => Service\Form\PslFormConfigFieldsetFactory::class,
         ],
     ],
     'search_form_adapters' => [

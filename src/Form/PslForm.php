@@ -245,15 +245,15 @@ class PslForm extends Form
         return $options;
     }
 
-    protected function getForm($name, $options)
-    {
-        $formElementManager = $this->getFormElementManager();
-        return $formElementManager->get($name, $options);
-    }
-
     protected function getFilterFieldset()
     {
         $options = $this->getOptions();
         return $this->getForm(FilterFieldset::class, $options);
+    }
+
+    protected function getForm($name, $options)
+    {
+        $formElementManager = $this->getFormElementManager();
+        return $formElementManager->get($name, $options);
     }
 }

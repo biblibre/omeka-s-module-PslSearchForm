@@ -55,16 +55,6 @@ class FilterFieldset extends Fieldset
         ]);
     }
 
-    protected function sortByWeight($fields, $settings)
-    {
-        uksort($fields, function ($a, $b) use ($settings) {
-            $aWeight = $settings[$a]['weight'];
-            $bWeight = $settings[$b]['weight'];
-            return $aWeight - $bWeight;
-        });
-        return $fields;
-    }
-
     protected function getFieldOptions()
     {
         $searchPage = $this->getOption('search_page');
@@ -94,5 +84,15 @@ class FilterFieldset extends Fieldset
         $options = $this->sortByWeight($options, $formSettings['advanced-fields']);
 
         return $options;
+    }
+
+    protected function sortByWeight($fields, $settings)
+    {
+        uksort($fields, function ($a, $b) use ($settings) {
+            $aWeight = $settings[$a]['weight'];
+            $bWeight = $settings[$b]['weight'];
+            return $aWeight - $bWeight;
+        });
+        return $fields;
     }
 }

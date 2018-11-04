@@ -52,7 +52,7 @@ class PslFormAdapter implements FormAdapterInterface
 
     public function getConfigFormClass()
     {
-        return \PslSearchForm\Form\PslFormConfigFieldset::class;
+        return \PslSearchForm\Form\Admin\PslFormConfigFieldset::class;
     }
 
     public function toQuery(array $request, array $formSettings)

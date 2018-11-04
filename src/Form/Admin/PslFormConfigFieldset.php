@@ -28,7 +28,7 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-namespace PslSearchForm\Form;
+namespace PslSearchForm\Form\Admin;
 
 use Search\Query;
 use Zend\Form\Element;
