@@ -1,10 +1,9 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "hash": "f6d8ade6cc2d15c31dc3021c0fcea22d",
     "content-hash": "698e59fa020ec6b1a86762ee8e062a6d",
     "packages": [],
     "packages-dev": [
@@ -41,7 +40,7 @@
                 "omeka",
                 "test"
             ],
-            "time": "2016-09-22 16:40:26"
+            "time": "2016-09-22T16:40:26+00:00"
         }
     ],
     "aliases": [],
