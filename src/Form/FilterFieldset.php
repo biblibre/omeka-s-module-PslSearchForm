@@ -69,7 +69,11 @@ class FilterFieldset extends Fieldset
     {
         $searchPage = $this->getOption('search_page');
         $searchIndex = $searchPage->index();
-        $availableFields = $searchIndex->adapter()->getAvailableFields($searchIndex);
+        $adapter = $searchIndex->adapter();
+        if (empty($adapter)) {
+            return [];
+        }
+        $availableFields = $adapter->getAvailableFields($searchIndex);
         $settings = $searchPage->settings();
         $formSettings = $settings['form'];
 
