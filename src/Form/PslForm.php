@@ -197,17 +197,21 @@ class PslForm extends Form
     {
         $fieldset = new Fieldset('text');
 
-        $fieldset->add([
-            'name' => 'filters',
-            'type' => Element\Collection::class,
-            'options' => [
-                'label' => 'Filters', // @translate
-                'count' => 2,
-                'should_create_template' => true,
-                'allow_add' => true,
-                'target_element' => $this->getFilterFieldset(),
-            ],
-        ]);
+        $filterFieldset = $this->getFilterFieldset();
+        if ($filterFieldset->count()) {
+            $fieldset->add([
+                'name' => 'filters',
+                'type' => Element\Collection::class,
+                'options' => [
+                    'label' => 'Filters', // @translate
+                    'count' => 2,
+                    'should_create_template' => true,
+                    'allow_add' => true,
+                    'target_element' => $filterFieldset,
+                    'required' => false,
+                ],
+            ]);
+        }
 
         $fieldset->add([
             'name' => 'creation-year',

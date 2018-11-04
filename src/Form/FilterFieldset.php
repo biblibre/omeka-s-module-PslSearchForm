@@ -37,15 +37,21 @@ class FilterFieldset extends Fieldset
 {
     public function init()
     {
+        $fieldOptions = $this->getFieldOptions();
+        if (empty($fieldOptions)) {
+           return;
+        }
+
         $this->setAttributes([
             'class' => 'filter',
         ]);
 
+        // No issue with input filter for select: there are always options.
         $this->add([
             'name' => 'field',
             'type' => Element\Select::class,
             'options' => [
-                'value_options' => $this->getFieldOptions(),
+                'value_options' => $fieldOptions,
             ],
         ]);
 
