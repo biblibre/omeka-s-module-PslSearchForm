@@ -5,7 +5,8 @@
  */
 
 $translate = $this->plugin('translate');
-// Scripts are loaded via an event that loads psl-search-form-external.
+$formElement = $this->plugin('formElement');
+// Scripts in psl-search-form-layout.phtml are loaded via an event that loads psl-search-form-external.
 $form->prepare();
 ?>
 <?php echo $this->form()->openTag($form); ?>
@@ -73,7 +74,7 @@ $form->prepare();
         </div>
     </div>
 </div>
-
+<?php echo $formElement($form->get('csrf')); ?>
 <?php echo $this->form()->closeTag(); ?>
 
 <?php // TODO Move this inside js. ?>

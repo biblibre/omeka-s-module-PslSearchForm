@@ -46,9 +46,6 @@ class PslForm extends Form
 
     public function init()
     {
-        // TODO Keep csrf in psl search form.
-        $this->remove('csrf');
-
         $this->add([
             'name' => 'q',
             'type' => Element\Text::class,
