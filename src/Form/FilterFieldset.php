@@ -73,6 +73,10 @@ class FilterFieldset extends Fieldset
         $settings = $searchPage->settings();
         $formSettings = $settings['form'];
 
+        if (empty($formSettings['advanced-fields'])) {
+            return [];
+        }
+
         $options = [];
         foreach ($formSettings['advanced-fields'] as $name => $field) {
             if ($field['enabled'] && isset($availableFields[$name])) {
@@ -95,9 +99,7 @@ class FilterFieldset extends Fieldset
     protected function sortByWeight($fields, $settings)
     {
         uksort($fields, function ($a, $b) use ($settings) {
-            $aWeight = $settings[$a]['weight'];
-            $bWeight = $settings[$b]['weight'];
-            return $aWeight - $bWeight;
+            return $settings[$a]['weight'] - $settings[$b]['weight'];
         });
         return $fields;
     }
