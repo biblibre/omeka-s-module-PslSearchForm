@@ -72,18 +72,20 @@ class PslFormAdapter implements FormAdapterInterface
             $query->addFilter($field, $request['map']['spatial-coverage']);
         }
 
-        if (isset($request['date']['from']) || isset($request['date']['to'])) {
-            $field = $formSettings['date_range_field'];
+        if (isset($formSettings['date_range_field']) &&
+            (isset($request['date']['from']) || isset($request['date']['to']))
+        ) {
             $start = $request['date']['from'];
             $end = $request['date']['to'];
             if ($start || $end) {
-                $query->addDateRangeFilter($field, $start, $end);
+                $query->addDateRangeFilter($formSettings['date_range_field'], $start, $end);
             }
         }
 
-        if (isset($request['itemSet']['ids'])) {
-            $field = $formSettings['item_set_id_field'];
-            $query->addFilter($field, $request['itemSet']['ids']);
+        if (isset($formSettings['item_set_id_field'])
+            && isset($request['itemSet']['ids'])
+        ) {
+            $query->addFilter($formSettings['item_set_id_field'], $request['itemSet']['ids']);
         }
 
         if (isset($request['text']['filters'])) {
@@ -94,9 +96,10 @@ class PslFormAdapter implements FormAdapterInterface
             }
         }
 
-        if (!empty($request['text']['creation-year'])) {
-            $field = $formSettings['creation_year_field'];
-            $query->addFilter($field, $request['text']['creation-year']);
+        if (isset($formSettings['creation_year_field'])
+            && !empty($request['text']['creation-year'])
+        ) {
+            $query->addFilter($formSettings['creation_year_field'], $request['text']['creation-year']);
         }
 
         return $query;
