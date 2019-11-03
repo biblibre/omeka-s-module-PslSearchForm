@@ -2,7 +2,7 @@
 
 /*
  * Copyright BibLibre, 2016
- * Copyright Daniel Berthereau 2018
+ * Copyright Daniel Berthereau 2018-2019
  *
  * This software is governed by the CeCILL license under French law and abiding
  * by the rules of distribution of free software.  You can use, modify and/ or
@@ -69,16 +69,15 @@ class FilterFieldset extends Fieldset
         if (empty($adapter)) {
             return [];
         }
+
         $availableFields = $adapter->getAvailableFields($searchIndex);
         $settings = $searchPage->settings();
-        $formSettings = $settings['form'];
-
-        if (empty($formSettings['advanced-fields'])) {
+        if (empty($settings['form']['advanced-fields'])) {
             return [];
         }
 
         $options = [];
-        foreach ($formSettings['advanced-fields'] as $name => $field) {
+        foreach ($settings['form']['advanced-fields'] as $name => $field) {
             if ($field['enabled'] && isset($availableFields[$name])) {
                 if (isset($field['display']['label']) && $field['display']['label']) {
                     $label = $field['display']['label'];
@@ -91,9 +90,7 @@ class FilterFieldset extends Fieldset
             }
         }
 
-        $options = $this->sortByWeight($options, $formSettings['advanced-fields']);
-
-        return $options;
+        return $this->sortByWeight($options, $settings['form']['advanced-fields']);
     }
 
     protected function sortByWeight($fields, $settings)

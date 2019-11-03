@@ -8,7 +8,7 @@ $translate = $this->plugin('translate');
 $formCollection = $this->plugin('formCollection');
 $formElement = $this->plugin('formElement');
 
-$params = $this->params()->fromQuery();
+$params = $this->params()->fromQuery() ?: [];
 $form->setData($params);
 
 // Scripts in psl-search-form-layout.phtml are loaded via an event that loads psl-search-form-external.
