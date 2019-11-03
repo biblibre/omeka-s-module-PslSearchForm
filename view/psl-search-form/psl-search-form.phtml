@@ -14,79 +14,80 @@ $form->setData($params);
 // Scripts in psl-search-form-layout.phtml are loaded via an event that loads psl-search-form-external.
 $form->prepare();
 ?>
-<?php echo $this->form()->openTag($form); ?>
+
+<?= $this->form()->openTag($form) ?>
 
 <div id="psl-search-form-wrapper">
-    <button type="button" class="psl-new-search"><?php echo $translate('New search'); ?></button>
+    <button type="button" class="psl-new-search"><?= $translate('New search') ?></button>
     <div id="psl-search-form">
         <ul class="psl-tabs">
             <li class="psl-tab-map">
-                <a href="#psl-search-form-map" title="<?php echo $translate('Location'); ?>"><i class="fa fa-map-marker"></i></a>
+                <a href="#psl-search-form-map" title="<?= $translate('Location') ?>"><i class="fa fa-map-marker"></i></a>
             </li>
             <li class="psl-tab-date">
-                <a href="#psl-search-form-date" title="<?php echo $translate('Time period'); ?>"><i class="fa fa-hourglass-half"></i></a>
+                <a href="#psl-search-form-date" title="<?= $translate('Time period') ?>"><i class="fa fa-hourglass-half"></i></a>
             </li>
             <li class="psl-tab-itemset">
-                <a href="#psl-search-form-itemset" title="<?php echo $translate('Collections'); ?>"><i class="fa fa-book"></i></a>
+                <a href="#psl-search-form-itemset" title="<?= $translate('Collections') ?>"><i class="fa fa-book"></i></a>
             </li>
             <li class="psl-tab-search">
                 <button type="button" class="reset-tab" data-tab="search"><i class="fa fa-times-circle fa-times-circle-o"></i></button>
-                <?php echo $this->formText($form->get('q')); ?>
+                <?= $this->formText($form->get('q')) ?>
             </li>
             <li class="psl-tab-text">
-                <a href="#psl-search-form-text" title="<?php echo $translate('More'); ?>"><i class="fa fa-plus"></i></a>
+                <a href="#psl-search-form-text" title="<?= $translate('More') ?>"><i class="fa fa-plus"></i></a>
             </li>
             <li class="psl-tab-submit"><input type="submit" value="OK"/></li>
         </ul>
         <div id="psl-search-form-map">
-            <?php echo $formCollection($form->get('map'), false); ?>
+            <?= $formCollection($form->get('map'), false) ?>
             <div id="psl-search-form-leaflet-map"></div>
-            <button type="button" class="reset-tab" data-tab="map"><?php echo $translate('Reset'); ?></button>
+            <button type="button" class="reset-tab" data-tab="map"><?= $translate('Reset') ?></button>
         </div>
         <div id="psl-search-form-date">
-            <label><?php echo $translate('Time period'); ?></label>
-            <?php echo $formCollection($form->get('date'), false); ?>
+            <label><?= $translate('Time period') ?></label>
+            <?= $formCollection($form->get('date'), false) ?>
             <div id="psl-search-form-date-slider"></div>
             <div id="psl-search-form-date-graduations">
-                <div><?php echo $translate('14th century'); ?></div>
-                <div><?php echo $translate('15th'); ?></div>
-                <div><?php echo $translate('16th'); ?></div>
-                <div><?php echo $translate('17th'); ?></div>
-                <div><?php echo $translate('18th'); ?></div>
-                <div><?php echo $translate('19th'); ?></div>
-                <div><?php echo $translate('20th'); ?></div>
-                <div><?php echo $translate('21th century'); ?></div>
+                <div><?= $translate('14th century') ?></div>
+                <div><?= $translate('15th') ?></div>
+                <div><?= $translate('16th') ?></div>
+                <div><?= $translate('17th') ?></div>
+                <div><?= $translate('18th') ?></div>
+                <div><?= $translate('19th') ?></div>
+                <div><?= $translate('20th') ?></div>
+                <div><?= $translate('21th century') ?></div>
             </div>
-            <button type="button" class="reset-tab" data-tab="date"><?php echo $translate('Reset'); ?></button>
+            <button type="button" class="reset-tab" data-tab="date"><?= $translate('Reset') ?></button>
         </div>
         <div id="psl-search-form-itemset">
-            <?php echo $formCollection($form->get('itemSet'), false); ?>
-            <button type="button" class="reset-tab" data-tab="itemset"><?php echo $translate('Reset'); ?></button>
+            <?= $formCollection($form->get('itemSet'), false) ?>
+            <button type="button" class="reset-tab" data-tab="itemset"><?= $translate('Reset') ?></button>
         </div>
         <div id="psl-search-form-text">
             <div>
                 <?php /** @var Zend\Form\Element\Collection $filters */ ?>
-                <?php $textFieldset = $form->get('text'); ?>
+                <?php $textFieldset = $form->get('text') ?>
                 <?php if ($textFieldset->has('filters')): ?>
-                <?php $filters = $textFieldset->get('filters'); ?>
+                <?php $filters = $textFieldset->get('filters') ?>
                 <div class="filters">
                     <?php foreach ($filters->getFieldsets() as $fieldset): ?>
-                        <?php echo $formCollection($fieldset, true); ?>
+                        <?= $formCollection($fieldset, true) ?>
                     <?php endforeach; ?>
-                    <?php echo $formCollection()->renderTemplate($filters); ?>
+                    <?= $formCollection()->renderTemplate($filters) ?>
                     <button type="button" class="psl-add-filter"><i class="fa fa-plus"></i></button>
                 </div>
                 <?php endif; ?>
-                <?php echo $this->formRow($textFieldset->get('creation-year')); ?>
+                <?= $this->formRow($textFieldset->get('creation-year')) ?>
             </div>
-            <button type="button" class="reset-tab" data-tab="text"><?php echo $translate('Reset'); ?></button>
+            <button type="button" class="reset-tab" data-tab="text"><?= $translate('Reset') ?></button>
         </div>
     </div>
 </div>
-<?php echo $formElement($form->get('csrf')); ?>
-<?php echo $this->form()->closeTag(); ?>
+<?= $formElement($form->get('csrf')) ?>
+<?= $this->form()->closeTag() ?>
 
 <?php // TODO Move this inside js. ?>
 <script>
-    var searchLocations = <?php echo json_encode($form->getLocations()); ?>;
+    var searchLocations = <?= json_encode($form->getLocations()) ?>;
 </script>
