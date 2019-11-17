@@ -12,6 +12,6 @@ $this->headLink()
 
 // Js are prepended to avoid issues with module Mapping, that uses leaflet too.
 $this->headScript()
-    ->prependFile($assetUrl('js/psl-search-form.js', 'PslSearchForm'))
-    ->prependFile($assetUrl('vendor/leaflet/leaflet.js', 'PslSearchForm'))
-    ->prependFile($assetUrl('jquery-ui.min.js', 'jQueryUI'));
+    ->prependFile($assetUrl('js/psl-search-form.js', 'PslSearchForm'), 'text/javascript', ['defer' => 'defer'])
+    ->prependFile($assetUrl('vendor/leaflet/leaflet.js', 'PslSearchForm'), 'text/javascript', ['defer' => 'defer'])
+    ->prependFile($assetUrl('jquery-ui.min.js', 'jQueryUI'), 'text/javascript', ['defer' => 'defer']);
