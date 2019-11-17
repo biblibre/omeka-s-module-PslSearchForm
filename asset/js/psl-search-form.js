@@ -1,4 +1,8 @@
-(function($) {
+window.addEventListener('DOMContentLoaded', function() {
+    (function($) {
+
+    /* Tabs */
+
     $.fn.pslTabs = function() {
         this.each(function() {
             var container = $(this);
@@ -22,9 +26,9 @@
             container.children('div').hide();
         });
     };
-})(jQuery);
 
-$(document).ready(function() {
+    /* Markers */
+
     var defaultLocation = [50.695, -5.537];
     var defaultZoom = 3;
 
@@ -103,13 +107,16 @@ $(document).ready(function() {
     }
 
     spatialCoverageInput.trigger('change');
-});
 
-$(document).ready(function() {
+    /* Date range */
+
     var dateFrom = $('#psl-search-form input[name="date[from]"]');
     var dateTo = $('#psl-search-form input[name="date[to]"]');
     var dateMin = 1300;
     var dateMax = 2100;
+
+    // FIXME Incompatibility with UniversalViewer (slider comes from jQuery-UI).
+    if ($.isFunction($.fn.slider)) {
 
     $('#psl-search-form-date-slider').slider({
         range: true,
@@ -129,11 +136,13 @@ $(document).ready(function() {
         }
     });
 
+    }
+
     dateFrom.parents('.field').hide();
     dateTo.parents('.field').hide();
-});
 
-$(document).ready(function() {
+    /* Filter management */
+
     $('#psl-search-form .psl-add-filter').on('click', function() {
         var filters = $(this).parents('.filters');
         var count = filters.children('.filter').length;
@@ -141,9 +150,9 @@ $(document).ready(function() {
         template = template.replace(/__index__/g, count);
         filters.children('.filter').last().after(template);
     });
-});
 
-$(document).ready(function() {
+    /* Form and tab management */
+
     var form = $('#psl-search-form');
 
     form.pslTabs();
@@ -279,4 +288,6 @@ $(document).ready(function() {
             tabs[name].reset();
         }
     });
+
+    })(jQuery);
 });
