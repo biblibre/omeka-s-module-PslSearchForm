@@ -39,7 +39,7 @@ class FilterFieldset extends Fieldset
     {
         $fieldOptions = $this->getFieldOptions();
         if (empty($fieldOptions)) {
-           return;
+            return;
         }
 
         $this->setAttributes([

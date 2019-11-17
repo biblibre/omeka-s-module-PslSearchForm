@@ -2,7 +2,7 @@
 
 /*
  * Copyright BibLibre, 2016
- * Copyright Daniel Berthereau 2018
+ * Copyright Daniel Berthereau 2018-2019
  *
  * This software is governed by the CeCILL license under French law and abiding
  * by the rules of distribution of free software.  You can use, modify and/ or
@@ -81,17 +81,28 @@ class PslForm extends Form
         ;
     }
 
+    /**
+     * @param SiteRepresentation $site
+     * @return \PslSearchForm\Form\PslForm
+     */
     public function setSite(SiteRepresentation $site = null)
     {
         $this->site = $site;
         return $this;
     }
 
+    /**
+     * @return \Omeka\Api\Representation\SiteRepresentation
+     */
     public function getSite()
     {
         return $this->site;
     }
 
+    /**
+     * @param Object $formElementManager
+     * @return \PslSearchForm\Form\PslForm
+     */
     public function setFormElementManager($formElementManager)
     {
         $this->formElementManager = $formElementManager;
@@ -237,10 +248,13 @@ class PslForm extends Form
         $site = $this->getSite();
         if (empty($site)) {
             return [];
-       }
+        }
+        // The site item sets may be public of private in Omeka 2.0, so it's not
+        // possible currently to use $site->siteItemSets().
+        $api = $site->getServiceLocator()->get('Omeka\ApiManager');
+        $itemSets = $api->search('item_sets', ['site_id' => $site->id()])->getContent();
         $options = [];
-        foreach ($site->siteItemSets() as $siteItemSet) {
-            $itemSet = $siteItemSet->itemSet();
+        foreach ($itemSets as $itemSet) {
             $options[$itemSet->id()] = $itemSet->displayTitle();
         }
         return $options;
