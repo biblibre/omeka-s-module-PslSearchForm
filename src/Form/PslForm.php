@@ -46,36 +46,39 @@ class PslForm extends Form
 
     public function init()
     {
-        $this->add([
-            'name' => 'q',
-            'type' => Element\Text::class,
-            'options' => [
-                'label' => 'Search', // @translate
-            ],
-            'attributes' => [
-                'placeholder' => 'Search', // @translate
-            ],
-        ]);
+        $this
+            ->add([
+                'name' => 'q',
+                'type' => Element\Text::class,
+                'options' => [
+                    'label' => 'Search', // @translate
+                ],
+                'attributes' => [
+                    'placeholder' => 'Search', // @translate
+                ],
+            ])
 
-        $this->add($this->mapFieldset());
-        $this->add($this->dateFieldset());
-        $this->add($this->itemSetFieldset());
-        $this->add($this->textFieldset());
+            ->add($this->mapFieldset())
+            ->add($this->dateFieldset())
+            ->add($this->itemSetFieldset())
+            ->add($this->textFieldset())
 
-        $this->add([
-            'name' => 'submit',
-            'type' => Element\Submit::class,
-            'attributes' => [
-                'value' => 'Submit', // @translate
-                'type' => 'submit',
-            ],
-        ]);
+            ->add([
+                'name' => 'submit',
+                'type' => Element\Submit::class,
+                'attributes' => [
+                    'value' => 'Submit', // @translate
+                    'type' => 'submit',
+                ],
+            ])
+        ;
 
-        $inputFilter = $this->getInputFilter();
-        $inputFilter->get('itemSet')->add([
-            'name' => 'ids',
-            'required' => false,
-        ]);
+        $this->getInputFilter()
+            ->get('itemSet')->add([
+                'name' => 'ids',
+                'required' => false,
+            ])
+        ;
     }
 
     public function setApiManager(Manager $apiManager)
@@ -91,6 +94,7 @@ class PslForm extends Form
     public function setFormElementManager($formElementManager)
     {
         $this->formElementManager = $formElementManager;
+        return $this;
     }
 
     public function getFormElementManager()
