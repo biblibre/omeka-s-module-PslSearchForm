@@ -30,7 +30,7 @@
 
 namespace PslSearchForm\Form;
 
-use Omeka\Api\Manager;
+use Omeka\Api\Representation\SiteRepresentation;
 use Search\Query;
 use Search\Querier\Exception\QuerierException;
 use Zend\Form\Element;
@@ -40,7 +40,7 @@ use Zend\Form\Form;
 class PslForm extends Form
 {
     /**
-     * @var Manager
+     * @var SiteRepresentation
      */
     protected $apiManager;
 
@@ -81,14 +81,15 @@ class PslForm extends Form
         ;
     }
 
-    public function setApiManager(Manager $apiManager)
+    public function setSite(SiteRepresentation $site = null)
     {
-        $this->apiManager = $apiManager;
+        $this->site = $site;
+        return $this;
     }
 
-    public function getApiManager()
+    public function getSite()
     {
-        return $this->apiManager;
+        return $this->site;
     }
 
     public function setFormElementManager($formElementManager)
@@ -233,16 +234,15 @@ class PslForm extends Form
 
     protected function getItemSetsOptions()
     {
-        $api = $this->getApiManager();
-
-        $itemSets = $api->search('item_sets', [
-            'is_public' => true,
-        ])->getContent();
+        $site = $this->getSite();
+        if (empty($site)) {
+            return [];
+       }
         $options = [];
-        foreach ($itemSets as $itemSet) {
+        foreach ($site->siteItemSets() as $siteItemSet) {
+            $itemSet = $siteItemSet->itemSet();
             $options[$itemSet->id()] = $itemSet->displayTitle();
         }
-
         return $options;
     }
 
