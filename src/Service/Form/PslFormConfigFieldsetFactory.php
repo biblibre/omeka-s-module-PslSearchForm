@@ -2,6 +2,7 @@
 
 /*
  * Copyright BibLibre, 2016
+ * Copyright Daniel Berthereau 2018
  *
  * This software is governed by the CeCILL license under French law and abiding
  * by the rules of distribution of free software.  You can use, modify and/ or
@@ -30,16 +31,13 @@
 namespace PslSearchForm\Service\Form;
 
 use Interop\Container\ContainerInterface;
+use PslSearchForm\Form\Admin\PslFormConfigFieldset;
 use Zend\ServiceManager\Factory\FactoryInterface;
-use PslSearchForm\Form\PslFormConfigFieldset;
 
 class PslFormConfigFieldsetFactory implements FactoryInterface
 {
     public function __invoke(ContainerInterface $services, $requestedName, array $options = null)
     {
-        $form = new PslFormConfigFieldset(null, $options);
-        $form->setTranslator($services->get('MvcTranslator'));
-
-        return $form;
+        return new PslFormConfigFieldset(null, $options);
     }
 }

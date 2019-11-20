@@ -2,6 +2,7 @@
 
 /*
  * Copyright BibLibre, 2016
+ * Copyright Daniel Berthereau 2018-2019
  *
  * This software is governed by the CeCILL license under French law and abiding
  * by the rules of distribution of free software.  You can use, modify and/ or
@@ -29,74 +30,83 @@
 
 namespace PslSearchForm\Form;
 
-use Zend\Form\Fieldset;
-use Zend\Form\Form;
-use Zend\I18n\Translator\TranslatorAwareInterface;
-use Zend\I18n\Translator\TranslatorAwareTrait;
+use Omeka\Api\Representation\SiteRepresentation;
 use Search\Query;
 use Search\Querier\Exception\QuerierException;
+use Zend\Form\Element;
+use Zend\Form\Fieldset;
+use Zend\Form\Form;
 
-class PslForm extends Form implements TranslatorAwareInterface
+class PslForm extends Form
 {
-    use TranslatorAwareTrait;
-
+    /**
+     * @var SiteRepresentation
+     */
     protected $apiManager;
 
     public function init()
     {
-        $translator = $this->getTranslator();
+        $this
+            ->add([
+                'name' => 'q',
+                'type' => Element\Text::class,
+                'options' => [
+                    'label' => 'Search', // @translate
+                ],
+                'attributes' => [
+                    'placeholder' => 'Search', // @translate
+                ],
+            ])
 
-        $this->remove('csrf');
+            ->add($this->mapFieldset())
+            ->add($this->dateFieldset())
+            ->add($this->itemSetFieldset())
+            ->add($this->textFieldset())
 
-        $this->add([
-            'name' => 'q',
-            'type' => 'Text',
-            'options' => [
-                'label' => $translator->translate('Search'),
-            ],
-            'attributes' => [
-                'placeholder' => $translator->translate('Search'),
-            ],
-        ]);
+            ->add([
+                'name' => 'submit',
+                'type' => Element\Submit::class,
+                'attributes' => [
+                    'value' => 'Submit', // @translate
+                    'type' => 'submit',
+                ],
+            ])
+        ;
 
-        $this->add($this->mapFieldset());
-        $this->add($this->dateFieldset());
-        $this->add($this->itemSetFieldset());
-        $this->add($this->textFieldset());
-
-        $this->add([
-            'name' => 'submit',
-            'type' => 'Submit',
-            'attributes' => [
-                'value' => $translator->translate('Submit'),
-                'type' => 'submit',
-            ],
-        ]);
+        $this->getInputFilter()
+            ->get('itemSet')->add([
+                'name' => 'ids',
+                'required' => false,
+            ])
+        ;
     }
 
-    public function getInputFilter()
+    /**
+     * @param SiteRepresentation $site
+     * @return \PslSearchForm\Form\PslForm
+     */
+    public function setSite(SiteRepresentation $site = null)
     {
-        $inputFilter = parent::getInputFilter();
-
-        $itemSetIds = $inputFilter->get('itemSet')->get('ids');
-        $itemSetIds->setRequired(false);
-
-        return $inputFilter;
+        $this->site = $site;
+        return $this;
     }
 
-    public function setApiManager($apiManager)
+    /**
+     * @return \Omeka\Api\Representation\SiteRepresentation
+     */
+    public function getSite()
     {
-        $this->apiManager = $apiManager;
+        return $this->site;
     }
 
-    public function getApiManager()
-    {
-        return $this->apiManager;
-    }
-
+    /**
+     * @param Object $formElementManager
+     * @return \PslSearchForm\Form\PslForm
+     */
     public function setFormElementManager($formElementManager)
     {
         $this->formElementManager = $formElementManager;
+        return $this;
     }
 
     public function getFormElementManager()
@@ -138,7 +148,6 @@ class PslForm extends Form implements TranslatorAwareInterface
             error_log($e->getMessage());
         }
 
-
         return $locationsOut;
     }
 
@@ -147,8 +156,8 @@ class PslForm extends Form implements TranslatorAwareInterface
         $fieldset = new Fieldset('map');
 
         $fieldset->add([
-            'type' => 'Hidden',
             'name' => 'spatial-coverage',
+            'type' => Element\Hidden::class,
         ]);
 
         return $fieldset;
@@ -157,27 +166,27 @@ class PslForm extends Form implements TranslatorAwareInterface
     protected function dateFieldset()
     {
         $fieldset = new Fieldset('date');
-        $fieldset->setLabel($this->translate('date'));
+        $fieldset->setLabel('date'); // @translate
 
         $fieldset->add([
             'name' => 'from',
-            'type' => 'Text',
+            'type' => Element\Text::class,
             'options' => [
-                'label' => $this->translate('From year'),
+                'label' => 'From year', // @translate
             ],
             'attributes' => [
-                'placeholder' => 'YYYY',
+                'placeholder' => 'YYYY', // @translate
             ],
         ]);
 
         $fieldset->add([
             'name' => 'to',
-            'type' => 'Text',
+            'type' => Element\Text::class,
             'options' => [
-                'label' => $this->translate('To year'),
+                'label' => 'To year', // @translate
             ],
             'attributes' => [
-                'placeholder' => 'YYYY',
+                'placeholder' => 'YYYY', // @translate
             ],
         ]);
 
@@ -190,9 +199,9 @@ class PslForm extends Form implements TranslatorAwareInterface
 
         $fieldset->add([
             'name' => 'ids',
-            'type' => 'MultiCheckbox',
+            'type' => Element\MultiCheckbox::class,
             'options' => [
-                'label' => $this->translate('Collections'),
+                'label' => 'Collections', // @translate
                 'value_options' => $this->getItemSetsOptions(),
             ],
         ]);
@@ -204,61 +213,62 @@ class PslForm extends Form implements TranslatorAwareInterface
     {
         $fieldset = new Fieldset('text');
 
-        $fieldset->add([
-            'type' => 'Collection',
-            'name' => 'filters',
-            'options' => [
-                'label' => 'Filters',
-                'count' => 2,
-                'should_create_template' => true,
-                'allow_add' => true,
-                'target_element' => $this->getFilterFieldset(),
-            ],
-        ]);
+        $filterFieldset = $this->getFilterFieldset();
+        if ($filterFieldset->count()) {
+            $fieldset->add([
+                'name' => 'filters',
+                'type' => Element\Collection::class,
+                'options' => [
+                    'label' => 'Filters', // @translate
+                    'count' => 2,
+                    'should_create_template' => true,
+                    'allow_add' => true,
+                    'target_element' => $filterFieldset,
+                    'required' => false,
+                ],
+            ]);
+        }
 
         $fieldset->add([
-            'type' => 'Text',
             'name' => 'creation-year',
+            'type' => Element\Text::class,
             'options' => [
-                'label' => $this->translate('Creation year'),
+                'label' => 'Creation year', // @translate
             ],
             'attributes' => [
-                'placeholder' => $this->translate('YYYY'),
+                'placeholder' => 'YYYY', // @translate
             ],
         ]);
 
         return $fieldset;
     }
 
-    protected function translate($string)
-    {
-        return $this->getTranslator()->translate($string);
-    }
-
     protected function getItemSetsOptions()
     {
-        $api = $this->getApiManager();
-
-        $itemSets = $api->search('item_sets', [
-            'is_public' => true,
-        ])->getContent();
+        $site = $this->getSite();
+        if (empty($site)) {
+            return [];
+        }
+        // The site item sets may be public of private in Omeka 2.0, so it's not
+        // possible currently to use $site->siteItemSets().
+        $api = $site->getServiceLocator()->get('Omeka\ApiManager');
+        $itemSets = $api->search('item_sets', ['site_id' => $site->id()])->getContent();
         $options = [];
         foreach ($itemSets as $itemSet) {
             $options[$itemSet->id()] = $itemSet->displayTitle();
         }
-
         return $options;
+    }
+
+    protected function getFilterFieldset()
+    {
+        $options = $this->getOptions();
+        return $this->getForm(FilterFieldset::class, $options);
     }
 
     protected function getForm($name, $options)
     {
         $formElementManager = $this->getFormElementManager();
         return $formElementManager->get($name, $options);
-    }
-
-    protected function getFilterFieldset()
-    {
-        $options = $this->getOptions();
-        return $this->getForm('PslSearchForm\Form\FilterFieldset', $options);
     }
 }

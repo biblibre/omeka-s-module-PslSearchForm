@@ -2,6 +2,7 @@
 
 /*
  * Copyright BibLibre, 2016
+ * Copyright Daniel Berthereau 2018
  *
  * This software is governed by the CeCILL license under French law and abiding
  * by the rules of distribution of free software.  You can use, modify and/ or
@@ -41,7 +42,7 @@ class PslFormAdapter implements FormAdapterInterface
 
     public function getFormClass()
     {
-        return  'PslSearchForm\Form\PslForm';
+        return  \PslSearchForm\Form\PslForm::class;
     }
 
     public function getFormPartial()
@@ -51,10 +52,10 @@ class PslFormAdapter implements FormAdapterInterface
 
     public function getConfigFormClass()
     {
-        return 'PslSearchForm\Form\PslFormConfigFieldset';
+        return \PslSearchForm\Form\Admin\PslFormConfigFieldset::class;
     }
 
-    public function toQuery($data, $formSettings)
+    public function toQuery(array $request, array $formSettings)
     {
         $query = new Query();
 
@@ -62,40 +63,43 @@ class PslFormAdapter implements FormAdapterInterface
             $query->addFilter($formSettings['is_public_field'], true);
         }
 
-        if (isset($data['q'])) {
-            $query->setQuery($data['q']);
+        if (isset($request['q'])) {
+            $query->setQuery($request['q']);
         }
 
-        if (!empty($data['map']['spatial-coverage'])) {
+        if (!empty($request['map']['spatial-coverage'])) {
             $field = $formSettings['spatial_coverage_field'];
-            $query->addFilter($field, $data['map']['spatial-coverage']);
+            $query->addFilter($field, $request['map']['spatial-coverage']);
         }
 
-        if (isset($data['date']['from']) || isset($data['date']['to'])) {
-            $field = $formSettings['date_range_field'];
-            $start = $data['date']['from'];
-            $end = $data['date']['to'];
+        if (isset($formSettings['date_range_field']) &&
+            (isset($request['date']['from']) || isset($request['date']['to']))
+        ) {
+            $start = $request['date']['from'];
+            $end = $request['date']['to'];
             if ($start || $end) {
-                $query->addDateRangeFilter($field, $start, $end);
+                $query->addDateRangeFilter($formSettings['date_range_field'], $start, $end);
             }
         }
 
-        if (isset($data['itemSet']['ids'])) {
-            $field = $formSettings['item_set_id_field'];
-            $query->addFilter($field, $data['itemSet']['ids']);
+        if (isset($formSettings['item_set_id_field'])
+            && isset($request['itemSet']['ids'])
+        ) {
+            $query->addFilter($formSettings['item_set_id_field'], $request['itemSet']['ids']);
         }
 
-        if (isset($data['text']['filters'])) {
-            foreach ($data['text']['filters'] as $filter) {
+        if (isset($request['text']['filters'])) {
+            foreach ($request['text']['filters'] as $filter) {
                 if (!empty($filter['value'])) {
                     $query->addFilter($filter['field'], $filter['value']);
                 }
             }
         }
 
-        if (!empty($data['text']['creation-year'])) {
-            $field = $formSettings['creation_year_field'];
-            $query->addFilter($field, $data['text']['creation-year']);
+        if (isset($formSettings['creation_year_field'])
+            && !empty($request['text']['creation-year'])
+        ) {
+            $query->addFilter($formSettings['creation_year_field'], $request['text']['creation-year']);
         }
 
         return $query;

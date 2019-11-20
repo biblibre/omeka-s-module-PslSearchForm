@@ -2,6 +2,7 @@
 
 /*
  * Copyright BibLibre, 2016
+ * Copyright Daniel Berthereau 2018-2019
  *
  * This software is governed by the CeCILL license under French law and abiding
  * by the rules of distribution of free software.  You can use, modify and/ or
@@ -29,49 +30,54 @@
 
 namespace PslSearchForm\Form;
 
+use Zend\Form\Element;
 use Zend\Form\Fieldset;
 
 class FilterFieldset extends Fieldset
 {
     public function init()
     {
+        $fieldOptions = $this->getFieldOptions();
+        if (empty($fieldOptions)) {
+            return;
+        }
+
         $this->setAttributes([
             'class' => 'filter',
         ]);
 
+        // No issue with input filter for select: there are always options.
         $this->add([
-            'type' => 'Select',
             'name' => 'field',
+            'type' => Element\Select::class,
             'options' => [
-                'value_options' => $this->getFieldOptions(),
+                'value_options' => $fieldOptions,
             ],
         ]);
 
         $this->add([
-            'type' => 'Text',
             'name' => 'value',
+            'type' => Element\Text::class,
         ]);
-    }
-
-    protected function sortByWeight($fields, $settings) {
-        uksort($fields, function($a, $b) use ($settings) {
-            $aWeight = $settings[$a]['weight'];
-            $bWeight = $settings[$b]['weight'];
-            return $aWeight - $bWeight;
-        });
-        return $fields;
     }
 
     protected function getFieldOptions()
     {
         $searchPage = $this->getOption('search_page');
         $searchIndex = $searchPage->index();
-        $availableFields = $searchIndex->adapter()->getAvailableFields($searchIndex);
+        $adapter = $searchIndex->adapter();
+        if (empty($adapter)) {
+            return [];
+        }
+
+        $availableFields = $adapter->getAvailableFields($searchIndex);
         $settings = $searchPage->settings();
-        $formSettings = $settings['form'];
+        if (empty($settings['form']['advanced-fields'])) {
+            return [];
+        }
 
         $options = [];
-        foreach ($formSettings['advanced-fields'] as $name => $field) {
+        foreach ($settings['form']['advanced-fields'] as $name => $field) {
             if ($field['enabled'] && isset($availableFields[$name])) {
                 if (isset($field['display']['label']) && $field['display']['label']) {
                     $label = $field['display']['label'];
@@ -84,8 +90,14 @@ class FilterFieldset extends Fieldset
             }
         }
 
-        $options = $this->sortByWeight($options, $formSettings['advanced-fields']);
+        return $this->sortByWeight($options, $settings['form']['advanced-fields']);
+    }
 
-        return $options;
+    protected function sortByWeight($fields, $settings)
+    {
+        uksort($fields, function ($a, $b) use ($settings) {
+            return $settings[$a]['weight'] - $settings[$b]['weight'];
+        });
+        return $fields;
     }
 }

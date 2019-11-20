@@ -2,6 +2,7 @@
 
 /*
  * Copyright BibLibre, 2016
+ * Copyright Daniel Berthereau 2018
  *
  * This software is governed by the CeCILL license under French law and abiding
  * by the rules of distribution of free software.  You can use, modify and/ or
@@ -27,85 +28,87 @@
  * knowledge of the CeCILL license and that you accept its terms.
  */
 
-namespace PslSearchForm\Form;
+namespace PslSearchForm\Form\Admin;
 
-use Zend\Form\Fieldset;
-use Zend\I18n\Translator\TranslatorAwareInterface;
-use Zend\I18n\Translator\TranslatorAwareTrait;
 use Search\Query;
+use Zend\Form\Element;
+use Zend\Form\Fieldset;
 
 class PslFormConfigFieldset extends Fieldset
 {
-    use TranslatorAwareTrait;
-
     public function init()
     {
-        $translator = $this->getTranslator();
-
         $this->add($this->getAdvancedFieldsFieldset());
+
+        $fieldOptions = $this->getFieldsOptions();
 
         $this->add([
             'name' => 'is_public_field',
-            'type' => 'Select',
+            'type' => Element\Select::class,
             'options' => [
-                'label' => $translator->translate('Is Public field'),
-                'value_options' => $this->getFieldsOptions(),
-                'empty_option' => $translator->translate('None'),
+                'label' => 'Is Public field', // @translate
+                'value_options' => $fieldOptions,
+                'empty_option' => 'None', // @translate
             ],
             'attributes' => [
                 'required' => true,
+                'class' => 'chosen-select',
             ],
         ]);
 
         $this->add([
             'name' => 'date_range_field',
-            'type' => 'Select',
+            'type' => Element\Select::class, // @translate
             'options' => [
-                'label' => $translator->translate('Date range field'),
-                'value_options' => $this->getFieldsOptions(),
-                'empty_option' => $translator->translate('None'),
+                'label' => 'Date range field', // @translate
+                'value_options' => $fieldOptions,
+                'empty_option' => 'None', // @translate
             ],
             'attributes' => [
                 'required' => true,
+                'class' => 'chosen-select',
             ],
         ]);
 
         $this->add([
             'name' => 'item_set_id_field',
-            'type' => 'Select',
+            'type' => Element\Select::class,
             'options' => [
-                'label' => $translator->translate('Item set id field'),
-                'value_options' => $this->getFieldsOptions(),
-                'empty_option' => $translator->translate('None'),
+                'label' => 'Item set id field', // @translate
+                'value_options' => $fieldOptions,
+                'empty_option' => 'None', // @translate
             ],
             'attributes' => [
                 'required' => true,
+                'class' => 'chosen-select',
             ],
         ]);
 
         $this->add([
             'name' => 'creation_year_field',
-            'type' => 'Select',
+            'type' => Element\Select::class,
             'options' => [
-                'label' => $translator->translate('Creation year field'),
-                'value_options' => $this->getFieldsOptions(),
-                'empty_option' => $translator->translate('None'),
+                'label' => 'Creation year field', // @translate
+                'value_options' => $fieldOptions,
+                'empty_option' => 'None', // @translate
             ],
             'attributes' => [
                 'required' => true,
+                'class' => 'chosen-select',
             ],
         ]);
 
         $this->add([
             'name' => 'spatial_coverage_field',
-            'type' => 'Select',
+            'type' => Element\Select::class,
             'options' => [
-                'label' => $translator->translate('Spatial coverage field'),
-                'value_options' => $this->getFieldsOptions(),
-                'empty_option' => $translator->translate('None'),
+                'label' => 'Spatial coverage field', // @translate
+                'value_options' => $fieldOptions,
+                'empty_option' => 'None', // @translate
             ],
             'attributes' => [
                 'required' => true,
+                'class' => 'chosen-select',
             ],
         ]);
 
@@ -114,11 +117,10 @@ class PslFormConfigFieldset extends Fieldset
 
     protected function getAdvancedFieldsFieldset()
     {
-        $translator = $this->getTranslator();
-
         $advancedFieldsFieldset = new Fieldset('advanced-fields');
-        $advancedFieldsFieldset->setLabel($translator->translate('Advanced search fields'));
+        $advancedFieldsFieldset->setLabel('Advanced search fields'); // @translate
         $advancedFieldsFieldset->setAttribute('data-sortable', '1');
+        $advancedFieldsFieldset->setAttribute('data-ordered', '0');
 
         $fields = $this->getAvailableFields();
         $weights = range(0, count($fields));
@@ -131,26 +133,26 @@ class PslFormConfigFieldset extends Fieldset
             $displayFieldset = new Fieldset('display');
             $displayFieldset->add([
                 'name' => 'label',
-                'type' => 'Text',
+                'type' => Element\Text::class,
                 'options' => [
-                    'label' => $translator->translate('Label'),
+                    'label' => 'Label', // @translate
                 ],
             ]);
             $fieldset->add($displayFieldset);
 
             $fieldset->add([
                 'name' => 'enabled',
-                'type' => 'Checkbox',
+                'type' => Element\Checkbox::class,
                 'options' => [
-                    'label' => $translator->translate('Enabled'),
+                    'label' => 'Enabled', // @translate
                 ],
             ]);
 
             $fieldset->add([
                 'name' => 'weight',
-                'type' => 'Select',
+                'type' => Element\Select::class,
                 'options' => [
-                    'label' => $translator->translate('Weight'),
+                    'label' => 'Weight', // @translate
                     'value_options' => $weight_options,
                 ],
                 'attributes' => [
@@ -186,23 +188,21 @@ class PslFormConfigFieldset extends Fieldset
 
     protected function getLocationsFieldset()
     {
-        $translator = $this->getTranslator();
-
         $fieldset = new Fieldset('locations');
 
         $locations = $this->getLocations();
         if (!empty($locations)) {
-            $fieldset->setLabel($translator->translate('Locations'));
+            $fieldset->setLabel('Locations'); // @translate
 
             foreach ($this->getLocations() as $location) {
                 $fieldset->add([
-                    'type' => 'Text',
                     'name' => $location,
+                    'type' => Element\Text::class,
                     'options' => [
                         'label' => $location,
                     ],
                     'attributes' => [
-                        'placeholder' => $translator->translate('Latitude, Longitude'),
+                        'placeholder' => 'Latitude, Longitude', // @translate
                     ],
                 ]);
             }
@@ -213,9 +213,13 @@ class PslFormConfigFieldset extends Fieldset
 
     protected function getLocations()
     {
+        /** @var \Search\Api\Representation\SearchPageRepresentation $searchPage */
         $searchPage = $this->getOption('search_page');
         $searchQuerier = $searchPage->index()->querier();
-        $spatialCoverageField = $searchPage->settings()['form']['spatial_coverage_field'];
+        $settings = $searchPage->settings();
+        $spatialCoverageField = isset($settings['form']['spatial_coverage_field'])
+            ? $settings['form']['spatial_coverage_field']
+            : '';
 
         $locations = [];
         if ($spatialCoverageField) {
@@ -247,8 +251,7 @@ class PslFormConfigFieldset extends Fieldset
             $fieldSettings = $settings['form']['advanced-fields'][$name];
 
             if (isset($fieldSettings['display']['label'])
-                && $fieldSettings['display']['label'])
-            {
+                && $fieldSettings['display']['label']) {
                 $label = $fieldSettings['display']['label'];
             }
         }

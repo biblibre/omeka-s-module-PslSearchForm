@@ -37,11 +37,10 @@ class PslFormFactory implements FactoryInterface
 {
     public function __invoke(ContainerInterface $services, $requestedName, array $options = null)
     {
+        $currentSite = $services->get('ControllerPluginManager')->get('currentSite');
         $form = new PslForm(null, $options);
-        $form->setTranslator($services->get('MvcTranslator'));
-        $form->setApiManager($services->get('Omeka\ApiManager'));
-        $form->setFormElementManager($services->get('FormElementManager'));
-
-        return $form;
+        return $form
+            ->setSite($currentSite())
+            ->setFormElementManager($services->get('FormElementManager'));
     }
 }

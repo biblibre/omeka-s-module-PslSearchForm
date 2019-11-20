@@ -1,0 +1,17 @@
+<?php
+/**
+ * @var \Zend\View\Renderer\PhpRenderer $this
+ */
+
+$assetUrl = $this->plugin('assetUrl');
+
+$this->headLink()
+    ->appendStylesheet($assetUrl('jquery-ui.min.css', 'jQueryUI'))
+    ->appendStylesheet($assetUrl('vendor/leaflet/leaflet.css', 'PslSearchForm'))
+    ->appendStylesheet($assetUrl('css/psl-search-form.css', 'PslSearchForm'));
+
+// Js are prepended to avoid issues with module Mapping, that uses leaflet too.
+$this->headScript()
+    ->prependFile($assetUrl('js/psl-search-form.js', 'PslSearchForm'), 'text/javascript', ['defer' => 'defer'])
+    ->prependFile($assetUrl('vendor/leaflet/leaflet.js', 'PslSearchForm'), 'text/javascript', ['defer' => 'defer'])
+    ->prependFile($assetUrl('jquery-ui.min.js', 'jQueryUI'), 'text/javascript', ['defer' => 'defer']);

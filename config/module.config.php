@@ -1,28 +1,30 @@
 <?php
+namespace PslSearchForm;
+
 return [
-    'form_elements' => [
-        'factories' => [
-            'PslSearchForm\Form\PslForm' => 'PslSearchForm\Service\Form\PslFormFactory',
-            'PslSearchForm\Form\FilterFieldset' => 'PslSearchForm\Service\Form\FilterFieldsetFactory',
-            'PslSearchForm\Form\PslFormConfigFieldset' => 'PslSearchForm\Service\Form\PslFormConfigFieldsetFactory',
-        ],
-    ],
     'view_manager' => [
         'template_path_stack' => [
-            __DIR__ . '/../view',
+            dirname(__DIR__) . '/view',
+        ],
+    ],
+    'form_elements' => [
+        'factories' => [
+            Form\PslForm::class => Service\Form\PslFormFactory::class,
+            Form\FilterFieldset::class => Service\Form\FilterFieldsetFactory::class,
+            Form\Admin\PslFormConfigFieldset::class => Service\Form\PslFormConfigFieldsetFactory::class,
         ],
     ],
     'search_form_adapters' => [
         'invokables' => [
-            'psl' => 'PslSearchForm\FormAdapter\PslFormAdapter',
+            'psl' => FormAdapter\PslFormAdapter::class,
         ],
     ],
     'translator' => [
         'translation_file_patterns' => [
             [
-                'type'        => 'gettext',
-                'base_dir'    => __DIR__ . '/../language',
-                'pattern'     => '%s.mo',
+                'type' => 'gettext',
+                'base_dir' => dirname(__DIR__) . '/language',
+                'pattern' => '%s.mo',
                 'text_domain' => null,
             ],
         ],
